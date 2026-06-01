@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityEngine.InputSystem;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
@@ -74,11 +75,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void InternalLockUpdate()
         {
-            if(Input.GetKeyUp(KeyCode.Escape))
+            if(Keyboard.current.escapeKey.wasReleasedThisFrame)
             {
                 m_cursorIsLocked = false;
             }
-            else if(Input.GetMouseButtonUp(0))
+            else if(Mouse.current.leftButton.wasReleasedThisFrame)
             {
                 m_cursorIsLocked = true;
             }

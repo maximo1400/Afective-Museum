@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class CubeModelChanger : MonoBehaviour
 {
@@ -40,7 +41,7 @@ public class CubeModelChanger : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerInRange && !isCameraActive && Input.GetKeyDown(KeyCode.Q))
+        if (isPlayerInRange && !isCameraActive && Keyboard.current.qKey.wasPressedThisFrame)
         {
             ActivateCamera();
         }

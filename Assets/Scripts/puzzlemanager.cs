@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PuzzleDrag : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class PuzzleDrag : MonoBehaviour
 
     void OnMouseDown()
     {
-        Vector3 mousePosition = Input.mousePosition;
+        Vector3 mousePosition = Mouse.current.position.ReadValue();
         offset = transform.position - new Vector3(mousePosition.x, mousePosition.y, 0);
         isDragging = true;
     }
@@ -16,7 +17,7 @@ public class PuzzleDrag : MonoBehaviour
     {
         if (isDragging)
         {
-            Vector3 mousePosition = Input.mousePosition;
+            Vector3 mousePosition = Mouse.current.position.ReadValue();
             transform.position = (new Vector3(mousePosition.x, mousePosition.y, 0) + offset);
         }
     }

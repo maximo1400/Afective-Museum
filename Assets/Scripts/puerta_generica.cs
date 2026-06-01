@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;  // Necesario para cambiar de escena
+using UnityEngine.InputSystem;
 
 public class UsualDoor : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class UsualDoor : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerNearby && Input.GetKeyDown(KeyCode.Q))
+        if (isPlayerNearby && Keyboard.current.qKey.wasPressedThisFrame)
             {
                 SceneManager.LoadScene("jose"); // Reemplaza con el nombre real de la escena
             }

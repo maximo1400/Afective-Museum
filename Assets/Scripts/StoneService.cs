@@ -1,4 +1,4 @@
-﻿/*
+/*
     StoneService.cs
     
     @author Gabriel Azócar Cárcamo <azocarcarcamo@gmail.com>
@@ -48,7 +48,26 @@ public class StoneService : MonoBehaviour
 
     public IEnumerator DownloadThumbs(Action doLast = null)
     {
+        if (StonesValues.stonesThumbs.Count > 0)
+        {
+            doLast?.Invoke();
+            yield break;
+        }
+
+        if (StonesValues.isDownloadingThumbs)
+        {
+            while (StonesValues.isDownloadingThumbs)
+            {
+                yield return null;
+            }
+            doLast?.Invoke();
+            yield break;
+        }
+
+        StonesValues.isDownloadingThumbs = true;
         yield return StartCoroutine(this.DownloadBundle(new BundleName(this.thumbsBundleName)));
+        StonesValues.isDownloadingThumbs = false;
+
         if (null != doLast)
         {
             doLast();
@@ -227,6 +246,7 @@ public class StoneService : MonoBehaviour
                 StonesValues.stonesThumbs.Add(sprite);
             }
             StonesValues.stonesThumbs.Sort((Sprite p, Sprite q) => Int32.Parse(p.name) - Int32.Parse(q.name));
+            thumbsBundle.Unload(false);
         }
 
         //SloadScreen.SetActive(false);

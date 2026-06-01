@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.InputSystem;
 
 public class GamificationHelper : MonoBehaviour
 {
@@ -47,7 +48,7 @@ public class GamificationHelper : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerNearby && Input.GetKeyDown(KeyCode.Q))
+        if (isPlayerNearby && Keyboard.current.qKey.wasPressedThisFrame)
         {
             ActivateCameraAndDisableFPC();
         }

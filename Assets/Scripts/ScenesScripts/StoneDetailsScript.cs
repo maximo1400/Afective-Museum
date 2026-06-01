@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Xml;
+using UnityEngine.InputSystem;
 
 public class StoneDetailsScript : MonoBehaviour
 {
@@ -46,11 +47,11 @@ public class StoneDetailsScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray r = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit rh;
         if (Physics.Raycast(r, out rh, 100))
         {
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            float scroll = Mouse.current.scroll.ReadValue().y;
 
             if (scroll != 0.0f && Physics.Raycast(r, out rh, 50))
             {
@@ -58,18 +59,18 @@ public class StoneDetailsScript : MonoBehaviour
                 this.stone.transform.localScale *= trans;
             }
 
-            if (Input.GetMouseButton(0))
+            if (Mouse.current.leftButton.isPressed)
             {
-                this.stone.transform.Rotate(rh.transform.up, -20.0f * Input.GetAxis("Mouse X"));
+                this.stone.transform.Rotate(rh.transform.up, -20.0f * Mouse.current.delta.ReadValue().x);
             }
 
-            if (Input.GetMouseButton(1))
+            if (Mouse.current.rightButton.isPressed)
             {
                 // Mover la piedra en un plano
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             SceneManager.LoadScene(StaticValues.previos_scene, LoadSceneMode.Single);
         }

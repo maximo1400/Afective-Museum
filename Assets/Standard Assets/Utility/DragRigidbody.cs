@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace UnityStandardAssets.Utility
 {
@@ -19,7 +20,7 @@ namespace UnityStandardAssets.Utility
         private void Update()
         {
             // Make sure the user pressed the mouse down
-            if (!Input.GetMouseButtonDown(0))
+            if (!Mouse.current.leftButton.wasPressedThisFrame)
             {
                 return;
             }
@@ -29,8 +30,8 @@ namespace UnityStandardAssets.Utility
             // We need to actually hit an object
             RaycastHit hit = new RaycastHit();
             if (
-                !Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition).origin,
-                                 mainCamera.ScreenPointToRay(Input.mousePosition).direction, out hit, 100,
+                !Physics.Raycast(mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()).origin,
+                                 mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()).direction, out hit, 100,
                                  Physics.DefaultRaycastLayers))
             {
                 return;
@@ -63,21 +64,21 @@ namespace UnityStandardAssets.Utility
 
         private IEnumerator DragObject(float distance)
         {
-            var oldDrag = m_SpringJoint.connectedBody.drag;
-            var oldAngularDrag = m_SpringJoint.connectedBody.angularDrag;
-            m_SpringJoint.connectedBody.drag = k_Drag;
-            m_SpringJoint.connectedBody.angularDrag = k_AngularDrag;
+            var oldDrag = m_SpringJoint.connectedBody.linearDamping;
+            var oldAngularDrag = m_SpringJoint.connectedBody.angularDamping;
+            m_SpringJoint.connectedBody.linearDamping = k_Drag;
+            m_SpringJoint.connectedBody.angularDamping = k_AngularDrag;
             var mainCamera = FindCamera();
-            while (Input.GetMouseButton(0))
+            while (Mouse.current.leftButton.isPressed)
             {
-                var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                var ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
                 m_SpringJoint.transform.position = ray.GetPoint(distance);
                 yield return null;
             }
             if (m_SpringJoint.connectedBody)
             {
-                m_SpringJoint.connectedBody.drag = oldDrag;
-                m_SpringJoint.connectedBody.angularDrag = oldAngularDrag;
+                m_SpringJoint.connectedBody.linearDamping = oldDrag;
+                m_SpringJoint.connectedBody.angularDamping = oldAngularDrag;
                 m_SpringJoint.connectedBody = null;
             }
         }

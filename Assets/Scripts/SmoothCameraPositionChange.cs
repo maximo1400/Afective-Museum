@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.InputSystem;
 
 public class SmoothCameraPositionChange : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class SmoothCameraPositionChange : MonoBehaviour
         Transform cameraPosition = mainCamera.transform;
         RaycastHit hit;
         Vector3 pond = new Vector3(0.0f, 1.0f, 20.0f);
-        if (Input.GetKeyDown("e") && !fps.enabled)
+        if (Keyboard.current.eKey.wasPressedThisFrame && !fps.enabled)
         {
             targetGameObject = null;
             fps.enabled = true;
@@ -53,7 +54,7 @@ public class SmoothCameraPositionChange : MonoBehaviour
         {
             targetGameObject = hit.transform;
 
-            if (Input.GetKeyDown("e"))
+            if (Keyboard.current.eKey.wasPressedThisFrame)
             {
                 if (fps.enabled)
                 {

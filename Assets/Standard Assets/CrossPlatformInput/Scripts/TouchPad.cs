@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 namespace UnityStandardAssets.CrossPlatformInput
 {
@@ -128,9 +129,9 @@ namespace UnityStandardAssets.CrossPlatformInput
             pointerDelta.y *= Ysensitivity;
 #else
 				Vector2 pointerDelta;
-				pointerDelta.x = Input.mousePosition.x - m_PreviousMouse.x;
-				pointerDelta.y = Input.mousePosition.y - m_PreviousMouse.y;
-				m_PreviousMouse = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f);
+				pointerDelta.x = Mouse.current.position.ReadValue().x - m_PreviousMouse.x;
+				pointerDelta.y = Mouse.current.position.ReadValue().y - m_PreviousMouse.y;
+				m_PreviousMouse = new Vector3(Mouse.current.position.ReadValue().x, Mouse.current.position.ReadValue().y, 0f);
 #endif
 				UpdateVirtualAxes(new Vector3(pointerDelta.x, pointerDelta.y, 0));
 			}

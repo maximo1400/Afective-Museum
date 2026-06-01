@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.InputSystem;
 
 public class CameraActivator : MonoBehaviour
 {
@@ -33,11 +34,11 @@ public class CameraActivator : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerInRange && !isCameraActive && Input.GetKeyDown(KeyCode.Q))
+        if (isPlayerInRange && !isCameraActive && Keyboard.current.qKey.wasPressedThisFrame)
         {
             ActivateCamera();
         }
-        else if (isCameraActive && Input.GetKeyDown(KeyCode.Escape))
+        else if (isCameraActive && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             ResetToMainCamera();
         }

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System;
 using System.Text;
 using System.IO;
+using UnityEngine.InputSystem;
 
 public class SceneScripts : MonoBehaviour
 {
@@ -53,7 +54,6 @@ public class SceneScripts : MonoBehaviour
 
         if (StonesValues.stonesThumbs.Count == 0)
         {
-            Debug.Log("0000");
             StartCoroutine(this.stoneService.DownloadThumbs(this.constructAddStoneMenu));
         } 
         else
@@ -65,7 +65,7 @@ public class SceneScripts : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("e") && !StaticValues.writing)
+        if (Keyboard.current.eKey.wasPressedThisFrame && !StaticValues.writing)
         {
             StaticValues.back_from_details = true;
             Save(false);

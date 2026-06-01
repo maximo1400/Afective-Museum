@@ -8,6 +8,7 @@ public class MusicManager : MonoBehaviour
 
     private void Start()
     {
+        transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
         PlayAmbient();
     }
