@@ -22,8 +22,8 @@ namespace UnityStandardAssets.CrossPlatformInput.PlatformSpecific
                 if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) val -= 1;
                 return val;
             }
-            if (name == "Mouse X") return Mouse.current.delta.x.ReadValue();
-            if (name == "Mouse Y") return Mouse.current.delta.y.ReadValue();
+            if (name == "Mouse X") return Mouse.current.delta.x.ReadValue() * 0.05f;
+            if (name == "Mouse Y") return Mouse.current.delta.y.ReadValue() * 0.05f;
             if (name == "Mouse ScrollWheel") return Mouse.current.scroll.y.ReadValue();
             return 0;
         }

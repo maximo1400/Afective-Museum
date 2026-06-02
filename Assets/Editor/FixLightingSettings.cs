@@ -6,16 +6,13 @@ public class ForceDisableBakeOnLoad
 {
     static ForceDisableBakeOnLoad()
     {
-        EditorApplication.playModeStateChanged += (state) =>
+        if (!EditorApplication.isPlayingOrWillChangePlaymode)
         {
-            if (state == PlayModeStateChange.ExitingEditMode)
-            {
-                Lightmapping.bakeOnSceneLoad = Lightmapping.BakeOnSceneLoadMode.Never;
+            Lightmapping.bakeOnSceneLoad = Lightmapping.BakeOnSceneLoadMode.Never;
 #pragma warning disable 0618
-                Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.OnDemand;
+            Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.OnDemand;
 #pragma warning restore 0618
-            }
-        };
+        }
     }
 
     [MenuItem("Tools/Force Disable All Auto-Baking")]
