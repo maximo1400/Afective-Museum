@@ -50,11 +50,7 @@ namespace UnityStandardAssets.ImageEffects
 
         protected void Start ()
         {
-            // Disable if we don't support image effects
-            if (!true) {
-                enabled = false;
-                return;
-            }
+            // Removed obsolete SystemInfo.supportsImageEffects check
 
             if ( shaderRGB == null || shaderYUV == null )
             {

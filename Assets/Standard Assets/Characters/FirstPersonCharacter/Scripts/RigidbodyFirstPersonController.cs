@@ -25,7 +25,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             private bool m_Running;
 #endif
 
-            public void UpdateDesiredTargetSpeed(Vector2 input)
+            public void UpdateDesiredTargetSpeed(Vector2 input, bool isRunning)
             {
 	            if (input == Vector2.zero) return;
 				if (input.x > 0 || input.x < 0)
@@ -44,8 +44,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 					//handled last as if strafing and moving forward at the same time forwards speed should take precedence
 					CurrentTargetSpeed = ForwardSpeed;
 				}
-#if !MOBILE_INPUT
-	            if (Keyboard.current.leftShiftKey.isPressed)
+
+	            if (isRunning)
 	            {
 		            CurrentTargetSpeed *= RunMultiplier;
 		            m_Running = true;
@@ -54,7 +54,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 	            {
 		            m_Running = false;
 	            }
-#endif
+
             }
 
 #if !MOBILE_INPUT
@@ -90,6 +90,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private Vector3 m_GroundContactNormal;
         private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
 
+        private InputAction moveAction;
+        private InputAction lookAction;
+        private InputAction jumpAction;
+        private InputAction runAction;
+
 
         public Vector3 Velocity
         {
@@ -124,6 +129,39 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_RigidBody = GetComponent<Rigidbody>();
             m_Capsule = GetComponent<CapsuleCollider>();
             mouseLook.Init (transform, cam.transform);
+
+            moveAction = new InputAction("Move", InputActionType.Value);
+            moveAction.AddCompositeBinding("Dpad")
+                .With("Up", "<Keyboard>/w")
+                .With("Down", "<Keyboard>/s")
+                .With("Left", "<Keyboard>/a")
+                .With("Right", "<Keyboard>/d");
+            moveAction.AddBinding("<Gamepad>/leftStick");
+
+            lookAction = new InputAction("Look", InputActionType.Value);
+            lookAction.AddBinding("<Pointer>/delta");
+            lookAction.AddBinding("<Gamepad>/rightStick");
+
+            jumpAction = new InputAction("Jump", InputActionType.Button);
+            jumpAction.AddBinding("<Keyboard>/space");
+            jumpAction.AddBinding("<Gamepad>/buttonSouth");
+
+            runAction = new InputAction("Run", InputActionType.Button);
+            runAction.AddBinding("<Keyboard>/leftShift");
+            runAction.AddBinding("<Gamepad>/leftTrigger");
+
+            moveAction.Enable();
+            lookAction.Enable();
+            jumpAction.Enable();
+            runAction.Enable();
+        }
+
+        private void OnDestroy()
+        {
+            moveAction?.Disable();
+            lookAction?.Disable();
+            jumpAction?.Disable();
+            runAction?.Disable();
         }
 
 
@@ -131,7 +169,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             RotateView();
 
-            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
+            if (jumpAction.triggered && !m_Jump)
             {
                 m_Jump = true;
             }
@@ -212,13 +250,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private Vector2 GetInput()
         {
-            
-            Vector2 input = new Vector2
-                {
-                    x = CrossPlatformInputManager.GetAxis("Horizontal"),
-                    y = CrossPlatformInputManager.GetAxis("Vertical")
-                };
-			movementSettings.UpdateDesiredTargetSpeed(input);
+            Vector2 input = moveAction.ReadValue<Vector2>();
+			movementSettings.UpdateDesiredTargetSpeed(input, runAction.IsPressed());
             return input;
         }
 
@@ -231,7 +264,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // get the rotation before it's changed
             float oldYRotation = transform.eulerAngles.y;
 
-            Vector2 lookInput = new Vector2(CrossPlatformInputManager.GetAxis("Mouse X"), CrossPlatformInputManager.GetAxis("Mouse Y"));
+            Vector2 lookInput = lookAction.ReadValue<Vector2>();
             mouseLook.LookRotation (transform, cam.transform, lookInput);
 
             if (m_IsGrounded || advancedSettings.airControl)

@@ -112,7 +112,7 @@ namespace UnityStandardAssets.Utility.Inspector
             {
                 for (int i = -1; i < items.arraySize; ++i)
                 {
-                    var item = items.GetArrayElementAtIndex(i);
+                    var item = i != -1 ? items.GetArrayElementAtIndex(i) : null;
 
                     float rowX = x;
                     for (int n = 0; n < props.Length; ++n)

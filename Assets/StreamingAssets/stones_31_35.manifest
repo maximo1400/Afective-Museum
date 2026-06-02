@@ -1,0 +1,45 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.3.16f1
+CRC: 1733973450
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: bbed6c4b59eb73213927056756cb1e0a
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: bfa3cea1abfc0e0fb9c3e5b9ed3bf66d
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: a584363ffaa611a14c35e08c0a429481
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5ae280afb4627824f9fe69bb0ec4f7a7, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Stones/Stone32.prefab
+- Assets/Prefabs/Stones/Stone34.prefab
+- Assets/Prefabs/Stones/Stone35.prefab
+- Assets/Prefabs/Stones/Stone31.prefab
+- Assets/Prefabs/Stones/Stone33.prefab
+Dependencies: []
