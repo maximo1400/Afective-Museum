@@ -1,4 +1,4 @@
-﻿/*
+/*
     StoneDetailsScript.cs
     
     @author Gabriel Azócar Cárcamo <azocarcarcamo@gmail.com>
@@ -139,7 +139,7 @@ public class StoneDetailsScript : MonoBehaviour
 
     private void FindStoneObject(string stoneName)
     {
-        foreach (GameObject obj in GameObject.FindObjectsOfType<GameObject>())
+        foreach (GameObject obj in GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None))
         {
             if (obj.name.Contains(stoneName))
             {

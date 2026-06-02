@@ -1,4 +1,4 @@
-﻿/*
+/*
     SceneScripts.cs
     
     @author Gabriel Azócar Cárcamo <azocarcarcamo@gmail.com>
@@ -172,7 +172,7 @@ public class SceneScripts : MonoBehaviour
         SaveGame.Load(f_name);
 
         // Clear stones in scene
-        object[] obj = FindObjectsOfType(typeof(GameObject));
+        object[] obj = FindObjectsByType(typeof(GameObject), FindObjectsSortMode.None);
         foreach (object o in obj)
         {
             GameObject g = (GameObject)o;
@@ -237,7 +237,7 @@ public class SceneScripts : MonoBehaviour
 
         SaveGame.Instance.Clear();
 
-        object[] obj = FindObjectsOfType(typeof(GameObject));
+        object[] obj = FindObjectsByType(typeof(GameObject), FindObjectsSortMode.None);
         foreach (object o in obj) {
             GameObject g = (GameObject)o;
             if (6 < g.name.Length)

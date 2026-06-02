@@ -51,7 +51,7 @@ namespace UnityStandardAssets.ImageEffects
         protected void Start ()
         {
             // Disable if we don't support image effects
-            if (!SystemInfo.supportsImageEffects) {
+            if (!true) {
                 enabled = false;
                 return;
             }

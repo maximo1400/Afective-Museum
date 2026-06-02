@@ -6,7 +6,7 @@ public class MusicZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            MusicManager music = FindObjectOfType<MusicManager>();
+            MusicManager music = FindFirstObjectByType<MusicManager>();
             if (music != null)
             {
                 music.StopAll(); // Detiene música ambiental
@@ -18,7 +18,7 @@ public class MusicZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            MusicManager music = FindObjectOfType<MusicManager>();
+            MusicManager music = FindFirstObjectByType<MusicManager>();
             if (music != null)
             {
                 music.PlayAmbient(); // Vuelve la música ambiental al salir

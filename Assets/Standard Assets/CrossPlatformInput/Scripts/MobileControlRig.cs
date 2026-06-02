@@ -29,7 +29,7 @@ namespace UnityStandardAssets.CrossPlatformInput
             if (Application.isPlaying) //if in the editor, need to check if we are playing, as start is also called just after exiting play
 #endif
             {
-                UnityEngine.EventSystems.EventSystem system = GameObject.FindObjectOfType<UnityEngine.EventSystems.EventSystem>();
+                UnityEngine.EventSystems.EventSystem system = GameObject.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>();
 
                 if (system == null)
                 {//the scene have no event system, spawn one
@@ -43,6 +43,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 
 #if UNITY_EDITOR
 
+#pragma warning disable 0618
         private void OnEnable()
         {
             EditorUserBuildSettings.activeBuildTargetChanged += Update;
@@ -55,6 +56,7 @@ namespace UnityStandardAssets.CrossPlatformInput
             EditorUserBuildSettings.activeBuildTargetChanged -= Update;
             EditorApplication.update -= Update;
         }
+#pragma warning restore 0618
 
 
         private void Update()

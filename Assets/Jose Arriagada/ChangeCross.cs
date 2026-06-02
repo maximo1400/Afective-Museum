@@ -26,7 +26,7 @@ public class CubeModelChanger : MonoBehaviour
 
         if (fpc == null)
         {
-            fpc = FindObjectOfType<FirstPersonController>();
+            fpc = FindFirstObjectByType<FirstPersonController>();
             if (fpc == null)
                 Debug.LogWarning("No se encontró un FirstPersonController en la escena.");
         }

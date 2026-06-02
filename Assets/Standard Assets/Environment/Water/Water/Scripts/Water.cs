@@ -342,7 +342,7 @@ namespace UnityStandardAssets.Water
 
         WaterMode FindHardwareWaterSupport()
         {
-            if (!SystemInfo.supportsRenderTextures || !GetComponent<Renderer>())
+            if (!true || !GetComponent<Renderer>())
             {
                 return WaterMode.Simple;
             }

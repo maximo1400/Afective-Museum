@@ -32,6 +32,7 @@ namespace UnityStandardAssets.Utility
 
 #if UNITY_EDITOR
 
+#pragma warning disable 0618
         private void OnEnable()
         {
             EditorUserBuildSettings.activeBuildTargetChanged += Update;
@@ -44,6 +45,7 @@ namespace UnityStandardAssets.Utility
             EditorUserBuildSettings.activeBuildTargetChanged -= Update;
             EditorApplication.update -= Update;
         }
+#pragma warning restore 0618
 
 
         private void Update()
