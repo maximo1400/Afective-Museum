@@ -48,6 +48,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
+        private InputAction moveAction;
+        private InputAction lookAction;
+        private InputAction jumpAction;
+        private InputAction runAction;
+
         // Use this for initialization
         private void Start()
         {
@@ -61,6 +66,39 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
+
+            moveAction = new InputAction("Move", InputActionType.Value);
+            moveAction.AddCompositeBinding("Dpad")
+                .With("Up", "<Keyboard>/w")
+                .With("Down", "<Keyboard>/s")
+                .With("Left", "<Keyboard>/a")
+                .With("Right", "<Keyboard>/d");
+            moveAction.AddBinding("<Gamepad>/leftStick");
+
+            lookAction = new InputAction("Look", InputActionType.Value);
+            lookAction.AddBinding("<Pointer>/delta");
+            lookAction.AddBinding("<Gamepad>/rightStick");
+
+            jumpAction = new InputAction("Jump", InputActionType.Button);
+            jumpAction.AddBinding("<Keyboard>/space");
+            jumpAction.AddBinding("<Gamepad>/buttonSouth");
+
+            runAction = new InputAction("Run", InputActionType.Button);
+            runAction.AddBinding("<Keyboard>/leftShift");
+            runAction.AddBinding("<Gamepad>/leftTrigger");
+
+            moveAction.Enable();
+            lookAction.Enable();
+            jumpAction.Enable();
+            runAction.Enable();
+        }
+
+        private void OnDestroy()
+        {
+            moveAction?.Disable();
+            lookAction?.Disable();
+            jumpAction?.Disable();
+            runAction?.Disable();
         }
 
 
@@ -71,7 +109,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+                m_Jump = jumpAction.triggered;
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
@@ -220,16 +258,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void GetInput(out float speed)
         {
             // Read input
-            float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-            float vertical = CrossPlatformInputManager.GetAxis("Vertical");
+            Vector2 moveInput = moveAction.ReadValue<Vector2>();
+            float horizontal = moveInput.x;
+            float vertical = moveInput.y;
 
             bool waswalking = m_IsWalking;
 
-#if !MOBILE_INPUT
             // On standalone builds, walk/run speed is modified by a key press.
             // keep track of whether or not the character is walking or running
-            m_IsWalking = !Keyboard.current.leftShiftKey.isPressed;
-#endif
+            m_IsWalking = !runAction.IsPressed();
             // set the desired speed to be walking or running
             speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
             m_Input = new Vector2(horizontal, vertical);
@@ -252,7 +289,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform);
+            Vector2 lookInput = lookAction.ReadValue<Vector2>();
+            m_MouseLook.LookRotation (transform, m_Camera.transform, lookInput);
         }
 
 
