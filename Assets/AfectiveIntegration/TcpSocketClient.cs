@@ -9,67 +9,78 @@ public class TcpSocketClient : MonoBehaviour
     [Header("TCP Connection Settings")]
     public string host = "127.0.0.1";
     public int port = 65432;
+    public float reconnectDelay = 2f;
+    [System.Serializable]
+    public class EmotionData
+    {
+        public float raw_valence;
+        public float raw_arousal;
+        public float smoothed_valence;
+        public float smoothed_arousal;
+        public float confidence;
+        public float timestamp;
+    }
 
-   private TcpClient client;
+    private TcpClient client;
     private NetworkStream stream;
-    private Thread receiveThread;
+    private Thread clientThread;
+    private bool isRunning = false;
     private bool isConnected = false;
 
     void Start()
     {
-        ConnectToTcpServer();
+        isRunning = true;
+        clientThread = new Thread(new ThreadStart(ClientLoop));
+        clientThread.IsBackground = true;
+        clientThread.Start();
     }
 
-    private void ConnectToTcpServer()
+    private void ClientLoop()
     {
-        try
-        {
-            client = new TcpClient(host, port);
-            stream = client.GetStream();
-            isConnected = true;
-            Debug.Log($"Connected to TCP Server at {host}:{port}");
-
-            receiveThread = new Thread(new ThreadStart(ListenForData));
-            receiveThread.IsBackground = true;
-            receiveThread.Start();
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Socket exception: {e}");
-        }
-    }
-
-    private void ListenForData()
-    {
-        Byte[] bytes = new Byte[1024];
-        while (isConnected)
+        while (isRunning)
         {
             try
             {
-                int length;
-                while ((length = stream.Read(bytes, 0, bytes.Length)) != 0)
+                client = new TcpClient(host, port);
+                stream = client.GetStream();
+                isConnected = true;
+                Debug.Log($"Connected to TCP Server at {host}:{port}");
+
+                Byte[] bytes = new Byte[1024];
+                while (isRunning && isConnected)
                 {
+                    int length = stream.Read(bytes, 0, bytes.Length);
                     var incomingData = new byte[length];
                     Array.Copy(bytes, 0, incomingData, 0, length);
                     string serverMessage = Encoding.UTF8.GetString(incomingData);
+
+                    EmotionData data = JsonUtility.FromJson<EmotionData>(serverMessage);
                     Debug.Log($"TCP message received: {serverMessage}");
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                if (isConnected) // Only log if we didn't intentionally close
+                // Suppressing socket exception spam on connection failure
+            }
+            finally
+            {
+                isConnected = false;
+                if (stream != null) { stream.Close(); stream = null; }
+                if (client != null) { client.Close(); client = null; }
+
+                if (isRunning)
                 {
-                    Debug.LogError($"Socket exception: {e}");
+                    Thread.Sleep(TimeSpan.FromSeconds(reconnectDelay));
                 }
-                break;
             }
         }
     }
 
     public void SendData(string message)
     {
-        if (client == null || !isConnected)
+        if (client == null || !isConnected || stream == null)
         {
+            Debug.LogWarning("Cannot send data, TCP client is not connected.");
             return;
         }
 
@@ -82,11 +93,13 @@ public class TcpSocketClient : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogError($"Socket exception: {e}");
+            isConnected = false; // Mark disconnected so we reconnect
         }
     }
 
     void OnDestroy()
     {
+        isRunning = false;
         isConnected = false;
 
         if (stream != null)
@@ -97,10 +110,9 @@ public class TcpSocketClient : MonoBehaviour
         {
             client.Close();
         }
-        if (receiveThread != null && receiveThread.IsAlive)
+        if (clientThread != null && clientThread.IsAlive)
         {
-            receiveThread.Abort();
+            clientThread.Abort();
         }
-        Debug.Log("Disconnected from TCP Server");
     }
 }
