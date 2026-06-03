@@ -91,8 +91,7 @@ public class StoneService : MonoBehaviour
         Quaternion rt = Quaternion.Euler(props.rotationX, props.rotationY, props.rotationZ);
         GameObject obj = Instantiate(this.SearchStone(stoneId), sp, rt);
 
-        ///
-        /// 
+
         Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
         foreach (Renderer r in renderers)
         {

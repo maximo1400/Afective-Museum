@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000002, guid: 53ddce9c93041a74485b10ebcf06ac7b,
+  m_LightingDataAsset: {fileID: 112000000, guid: 6e33801e9e1adc50cab9248f42888799,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 424d1b269f1a345488d91bc25309095a,
     type: 2}
@@ -564,10 +564,19 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1916508598803075540, guid: 9746c0499a60f224aa87cecf2cf40948, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3566688164397688081, guid: 9746c0499a60f224aa87cecf2cf40948,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 264874999}
+    - targetCorrespondingSourceObject: {fileID: 3307907897018540707, guid: 9746c0499a60f224aa87cecf2cf40948,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 264874998}
   m_SourcePrefab: {fileID: 100100000, guid: 9746c0499a60f224aa87cecf2cf40948, type: 3}
 --- !u!4 &264874995 stripped
 Transform:
@@ -575,6 +584,68 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 264874994}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &264874996 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3307907897018540707, guid: 9746c0499a60f224aa87cecf2cf40948,
+    type: 3}
+  m_PrefabInstance: {fileID: 264874994}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &264874997 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3566688164397688081, guid: 9746c0499a60f224aa87cecf2cf40948,
+    type: 3}
+  m_PrefabInstance: {fileID: 264874994}
+  m_PrefabAsset: {fileID: 0}
+--- !u!81 &264874998
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264874996}
+  m_Enabled: 1
+--- !u!114 &264874999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264874997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1 &297906086
 GameObject:
   m_ObjectHideFlags: 0

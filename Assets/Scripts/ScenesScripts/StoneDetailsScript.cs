@@ -23,7 +23,6 @@ public class StoneDetailsScript : MonoBehaviour
     public GameObject loadScreen;
     public Slider slider;
     private StoneService stoneService;
-
     // Use this for initialization
     void Start()
     {
@@ -32,7 +31,7 @@ public class StoneDetailsScript : MonoBehaviour
         stoneService.slider = this.slider;
 
         string[] firstSplit = StaticValues.stone_name.Split('(');
-        string number = firstSplit[0].Substring(5);
+        string number = firstSplit[0].Replace("Stone", "");
         try
         {
             int sID = Int32.Parse(number);
@@ -47,13 +46,10 @@ public class StoneDetailsScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Ray r = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit rh;
-        if (Physics.Raycast(r, out rh, 100))
+        if (this.stone != null)
         {
             float scroll = Mouse.current.scroll.ReadValue().y;
-
-            if (scroll != 0.0f && Physics.Raycast(r, out rh, 50))
+            if (scroll != 0.0f)
             {
                 float trans = scroll < 0 ? 0.9f : 1.1f;
                 this.stone.transform.localScale *= trans;
@@ -61,12 +57,22 @@ public class StoneDetailsScript : MonoBehaviour
 
             if (Mouse.current.leftButton.isPressed)
             {
-                this.stone.transform.Rotate(rh.transform.up, -20.0f * Mouse.current.delta.ReadValue().x);
+                Vector2 delta = Mouse.current.delta.ReadValue();
+                this.stone.transform.Rotate(Vector3.up, 0.5f * delta.x, Space.World);
+                this.stone.transform.Rotate(Vector3.right, -0.5f * delta.y, Space.World);
+            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                // Snap block on x axis 
+                Vector3 euler = this.stone.transform.eulerAngles;
+                euler.x = Mathf.Round(euler.x / 45f) * 45f;
+                this.stone.transform.rotation = Quaternion.Euler(euler);
             }
 
             if (Mouse.current.rightButton.isPressed)
             {
-                // Mover la piedra en un plano
+                Vector2 delta = Mouse.current.delta.ReadValue();
+                this.stone.transform.position += new Vector3(delta.x * 0.01f, delta.y * 0.01f, 0);
             }
         }
 
@@ -90,12 +96,13 @@ public class StoneDetailsScript : MonoBehaviour
 
     IEnumerator loadJSON(string stoneName)
     {
-        if (stoneName.Contains("Clone")) {
+        if (stoneName.Contains("Clone"))
+        {
             stoneName = stoneName.Split('(')[0];
         }
 
         try
-        { 
+        {
             int index = Int32.Parse(stoneName.Replace("Stone", ""));
             StoneService.BundleName bundleName = StoneService.CalculateAssetBundleNameByStoneIndex(index);
 
@@ -113,7 +120,7 @@ public class StoneDetailsScript : MonoBehaviour
             metaText[2].text = khachkar.location;
             metaText[4].text = "Accessibility: " + khachkar.accessibility;
             metaText[6].text = "Production Period: " + khachkar.productionPeriod;
-            
+
         }
         catch (FormatException)
         {
