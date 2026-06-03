@@ -177,12 +177,9 @@ public class SceneScripts : MonoBehaviour
         {
             GameObject g = (GameObject)o;
 
-            if (6 < g.name.Length)
+            if (g.name.StartsWith("Stone") && g.name.Length > 5 && char.IsDigit(g.name[5]))
             {
-                if (g.name.Substring(0, 5).Equals("Stone"))
-                {
-                    Destroy(g);
-                }
+                Destroy(g);
             }
         }
 
@@ -240,14 +237,11 @@ public class SceneScripts : MonoBehaviour
         object[] obj = FindObjectsByType(typeof(GameObject), FindObjectsSortMode.None);
         foreach (object o in obj) {
             GameObject g = (GameObject)o;
-            if (6 < g.name.Length)
+            if (g.name.StartsWith("Stone") && g.name.Length > 5 && char.IsDigit(g.name[5]))
             {
-                if (g.name.Substring(0, 5).Equals("Stone"))
-                {
-                    SaveGame.Instance.StonesNames.Add(this.GetStoneIndex(g.name));
-                    SaveGame.Instance.StonesPositions.Add(g.transform.position);
-                    SaveGame.Instance.StonesRotations.Add(g.transform.rotation);
-                }
+                SaveGame.Instance.StonesNames.Add(this.GetStoneIndex(g.name));
+                SaveGame.Instance.StonesPositions.Add(g.transform.position);
+                SaveGame.Instance.StonesRotations.Add(g.transform.rotation);
             }
         }
 
