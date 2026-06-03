@@ -32,7 +32,7 @@ public class StoneDetailsScript : MonoBehaviour
         stoneService.slider = this.slider;
 
         string[] firstSplit = StaticValues.stone_name.Split('(');
-        string number = firstSplit[0].Substring(5);
+        string number = firstSplit[0].Replace("Stone", "");
         try
         {
             int sID = Int32.Parse(number);
@@ -90,12 +90,13 @@ public class StoneDetailsScript : MonoBehaviour
 
     IEnumerator loadJSON(string stoneName)
     {
-        if (stoneName.Contains("Clone")) {
+        if (stoneName.Contains("Clone"))
+        {
             stoneName = stoneName.Split('(')[0];
         }
 
         try
-        { 
+        {
             int index = Int32.Parse(stoneName.Replace("Stone", ""));
             StoneService.BundleName bundleName = StoneService.CalculateAssetBundleNameByStoneIndex(index);
 
@@ -113,7 +114,7 @@ public class StoneDetailsScript : MonoBehaviour
             metaText[2].text = khachkar.location;
             metaText[4].text = "Accessibility: " + khachkar.accessibility;
             metaText[6].text = "Production Period: " + khachkar.productionPeriod;
-            
+
         }
         catch (FormatException)
         {
