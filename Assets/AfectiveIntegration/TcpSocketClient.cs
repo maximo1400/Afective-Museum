@@ -8,9 +8,9 @@ public class TcpSocketClient : MonoBehaviour
 {
     [Header("TCP Connection Settings")]
     public string host = "127.0.0.1";
-    public int port = 8080;
+    public int port = 65432;
 
-    private TcpClient client;
+   private TcpClient client;
     private NetworkStream stream;
     private Thread receiveThread;
     private bool isConnected = false;
