@@ -21,6 +21,20 @@ public class TcpSocketClient : MonoBehaviour
         public float timestamp;
     }
 
+    private EmotionData latestData;
+    private readonly object dataLock = new object();
+
+    public EmotionData LatestData
+    {
+        get
+        {
+            lock (dataLock)
+            {
+                return latestData;
+            }
+        }
+    }
+
     private TcpClient client;
     private NetworkStream stream;
     private Thread clientThread;
@@ -55,6 +69,10 @@ public class TcpSocketClient : MonoBehaviour
                     string serverMessage = Encoding.UTF8.GetString(incomingData);
 
                     EmotionData data = JsonUtility.FromJson<EmotionData>(serverMessage);
+                    lock (dataLock)
+                    {
+                        latestData = data;
+                    }
                     Debug.Log($"TCP message received: {serverMessage}");
                 }
             }
