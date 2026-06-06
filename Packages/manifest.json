@@ -16,7 +16,6 @@
     "com.unity.inputsystem": "1.19.0",
     "com.unity.multiplayer.samples.coop": "https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop.git?path=/Packages/com.unity.multiplayer.samples.coop#main",
     "com.unity.multiplayer.tools": "2.2.8",
-    "com.unity.purchasing": "5.3.1",
     "com.unity.sdk.linux-arm64": "1.1.0",
     "com.unity.sdk.linux-x86_64": "1.1.0",
     "com.unity.test-framework": "1.6.0",
