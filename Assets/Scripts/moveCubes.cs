@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PieceMover : MonoBehaviour
 {
@@ -25,9 +26,9 @@ public class PieceMover : MonoBehaviour
             return;
 
         // Presionar mouse
-        if (Input.GetMouseButtonDown(0))
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            Ray ray = raycastCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = raycastCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Physics.Raycast(ray, out RaycastHit hit) && hit.transform == transform)
             {
                 isDragging = true;
@@ -37,9 +38,9 @@ public class PieceMover : MonoBehaviour
         }
 
         // Mientras arrastras
-        if (isDragging && Input.GetMouseButton(0))
+        if (isDragging && Mouse.current.leftButton.isPressed)
         {
-            Ray ray = raycastCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = raycastCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             // Hacer raycast solo contra el layer del plano
             int mask = 1 << planeLayer;
@@ -53,7 +54,7 @@ public class PieceMover : MonoBehaviour
         }
 
         // Soltar mouse
-        if (isDragging && Input.GetMouseButtonUp(0))
+        if (isDragging && Mouse.current.leftButton.wasReleasedThisFrame)
         {
             float dist = Vector3.Distance(transform.localPosition, correctPosition);
             if (dist <= snapThreshold)

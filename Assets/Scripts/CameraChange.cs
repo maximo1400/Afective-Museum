@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class CameraChange : MonoBehaviour
 {
@@ -51,12 +52,12 @@ public class CameraChange : MonoBehaviour
         StaticValues.writing = loadDialog.activeSelf || saveDialog.activeSelf;
         if (!StaticValues.writing)
         {
-            if (Input.GetKeyDown(KeyCode.M))
+            if (Keyboard.current.mKey.wasPressedThisFrame)
             {
                 SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
             }
 
-            if (Input.GetKeyDown(KeyCode.T))
+            if (Keyboard.current.tKey.wasPressedThisFrame)
             {
                 FPS.SetActive(false);
                 Cursor.visible = true;
@@ -69,7 +70,7 @@ public class CameraChange : MonoBehaviour
                 showMoreButtons.SetActive(true);
             }
 
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Keyboard.current.pKey.wasPressedThisFrame)
             {
                 FPS.SetActive(true);
                 mainView.enabled = true;
@@ -83,7 +84,7 @@ public class CameraChange : MonoBehaviour
                 showMoreButtons.SetActive(false);
             }
 
-            if (Input.GetKeyDown("h"))
+            if (Keyboard.current.hKey.wasPressedThisFrame)
             {
                 helpPane.SetActive(!helpPane.activeSelf);
             }

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityEngine.InputSystem;
 
 namespace UnityStandardAssets.Utility
 {
@@ -95,8 +96,8 @@ namespace UnityStandardAssets.Utility
             }
             else
             {
-                inputH = Input.mousePosition.x;
-                inputV = Input.mousePosition.y;
+                inputH = Mouse.current.position.ReadValue().x;
+                inputV = Mouse.current.position.ReadValue().y;
 
                 // set values to allowed range
                 m_TargetAngles.y = Mathf.Lerp(-rotationRange.y*0.5f, rotationRange.y*0.5f, inputH/Screen.width);

@@ -47,7 +47,7 @@ public class GuestBookManager : MonoBehaviour
             string[] parts = lines[i].Split(',');
             if (parts.Length >= 2)
             {
-                outputText.text += $"👤 {parts[0]}:\n📝 {parts[1]}\n\n";
+                outputText.text += $"👀 <b>{parts[0]}</b>:\n \t🏡 {parts[1]}\n\n";
             }
         }
     }

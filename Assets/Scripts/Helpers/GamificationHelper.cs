@@ -1,11 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.InputSystem;
 
 public class GamificationHelper : MonoBehaviour
 {
@@ -31,7 +28,7 @@ public class GamificationHelper : MonoBehaviour
 
         if (fpc == null)
         {
-            fpc = FindObjectOfType<FirstPersonController>();
+            fpc = FindFirstObjectByType<FirstPersonController>();
             if (fpc == null)
             {
                 Debug.LogWarning("No se encontró un FirstPersonController en la escena.");
@@ -47,7 +44,7 @@ public class GamificationHelper : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerNearby && Input.GetKeyDown(KeyCode.Q))
+        if (isPlayerNearby && Keyboard.current.qKey.wasPressedThisFrame)
         {
             ActivateCameraAndDisableFPC();
         }

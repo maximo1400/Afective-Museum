@@ -1,4 +1,4 @@
-﻿/*
+/*
     StonesValues.cs
     
     @author Gabriel Azócar Cárcamo <azocarcarcamo@gmail.com>
@@ -13,6 +13,7 @@ public class StonesValues : MonoBehaviour
     public static List<AssetBundle> assetBundles = new List<AssetBundle>();
     public static List<AssetBundle> metadataAssetBundles = new List<AssetBundle>();
     public static int bundleSize = 5;
+    public static bool isDownloadingThumbs = false;
 
     void Start()
     {

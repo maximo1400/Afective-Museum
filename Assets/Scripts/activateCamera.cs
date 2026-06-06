@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.InputSystem;
 
 public class CameraActivator : MonoBehaviour
 {
@@ -22,10 +23,10 @@ public class CameraActivator : MonoBehaviour
         if (interactionCanvas != null)
             interactionCanvas.SetActive(false);
 
-        // 🔍 Detección automática del jugador usando FindObjectOfType
+        // 🔍 Detección automática del jugador usando FindFirstObjectByType
         if (playerController == null)
         {
-            playerController = FindObjectOfType<FirstPersonController>();
+            playerController = FindFirstObjectByType<FirstPersonController>();
             if (playerController == null)
                 Debug.LogWarning("No se encontró un FirstPersonController en la escena.");
         }
@@ -33,11 +34,11 @@ public class CameraActivator : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerInRange && !isCameraActive && Input.GetKeyDown(KeyCode.Q))
+        if (isPlayerInRange && !isCameraActive && Keyboard.current.qKey.wasPressedThisFrame)
         {
             ActivateCamera();
         }
-        else if (isCameraActive && Input.GetKeyDown(KeyCode.Escape))
+        else if (isCameraActive && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             ResetToMainCamera();
         }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Stone : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class Stone : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerNearby && Input.GetKeyDown(KeyCode.Q))
+        if (isPlayerNearby && Keyboard.current.qKey.wasPressedThisFrame)
         {
             collectedStones++;
             Debug.Log($"[STONE] Stone Collected. Total: {collectedStones}/{totalStones}");

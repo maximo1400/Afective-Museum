@@ -15,7 +15,7 @@ namespace UnityStandardAssets.Utility
         private void OnEnable()
         {
 #if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8 || UNITY_TIZEN || UNITY_STV
-			var renderers = FindObjectsOfType<Renderer>();
+			var renderers = FindObjectsByType<Renderer>(FindObjectsSortMode.None);
 			Debug.Log (renderers.Length+" renderers");
 			var oldMaterials = new List<Material>();
 			var newMaterials = new List<Material>();
@@ -112,7 +112,7 @@ namespace UnityStandardAssets.Utility.Inspector
             {
                 for (int i = -1; i < items.arraySize; ++i)
                 {
-                    var item = items.GetArrayElementAtIndex(i);
+                    var item = i != -1 ? items.GetArrayElementAtIndex(i) : null;
 
                     float rowX = x;
                     for (int n = 0; n < props.Length; ++n)

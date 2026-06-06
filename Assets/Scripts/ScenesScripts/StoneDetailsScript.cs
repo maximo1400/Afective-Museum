@@ -1,4 +1,4 @@
-﻿/*
+/*
     StoneDetailsScript.cs
     
     @author Gabriel Azócar Cárcamo <azocarcarcamo@gmail.com>
@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Xml;
+using UnityEngine.InputSystem;
 
 public class StoneDetailsScript : MonoBehaviour
 {
@@ -22,7 +23,6 @@ public class StoneDetailsScript : MonoBehaviour
     public GameObject loadScreen;
     public Slider slider;
     private StoneService stoneService;
-
     // Use this for initialization
     void Start()
     {
@@ -31,7 +31,7 @@ public class StoneDetailsScript : MonoBehaviour
         stoneService.slider = this.slider;
 
         string[] firstSplit = StaticValues.stone_name.Split('(');
-        string number = firstSplit[0].Substring(5);
+        string number = firstSplit[0].Replace("Stone", "");
         try
         {
             int sID = Int32.Parse(number);
@@ -46,30 +46,37 @@ public class StoneDetailsScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit rh;
-        if (Physics.Raycast(r, out rh, 100))
+        if (this.stone != null)
         {
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
-
-            if (scroll != 0.0f && Physics.Raycast(r, out rh, 50))
+            float scroll = Mouse.current.scroll.ReadValue().y;
+            if (scroll != 0.0f)
             {
                 float trans = scroll < 0 ? 0.9f : 1.1f;
                 this.stone.transform.localScale *= trans;
             }
 
-            if (Input.GetMouseButton(0))
+            if (Mouse.current.leftButton.isPressed)
             {
-                this.stone.transform.Rotate(rh.transform.up, -20.0f * Input.GetAxis("Mouse X"));
+                Vector2 delta = Mouse.current.delta.ReadValue();
+                this.stone.transform.Rotate(Vector3.up, 0.5f * delta.x, Space.World);
+                this.stone.transform.Rotate(Vector3.right, -0.5f * delta.y, Space.World);
+            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                // Snap block on x axis 
+                Vector3 euler = this.stone.transform.eulerAngles;
+                euler.x = Mathf.Round(euler.x / 45f) * 45f;
+                this.stone.transform.rotation = Quaternion.Euler(euler);
             }
 
-            if (Input.GetMouseButton(1))
+            if (Mouse.current.rightButton.isPressed)
             {
-                // Mover la piedra en un plano
+                Vector2 delta = Mouse.current.delta.ReadValue();
+                this.stone.transform.position += new Vector3(delta.x * 0.01f, delta.y * 0.01f, 0);
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             SceneManager.LoadScene(StaticValues.previos_scene, LoadSceneMode.Single);
         }
@@ -89,12 +96,13 @@ public class StoneDetailsScript : MonoBehaviour
 
     IEnumerator loadJSON(string stoneName)
     {
-        if (stoneName.Contains("Clone")) {
+        if (stoneName.Contains("Clone"))
+        {
             stoneName = stoneName.Split('(')[0];
         }
 
         try
-        { 
+        {
             int index = Int32.Parse(stoneName.Replace("Stone", ""));
             StoneService.BundleName bundleName = StoneService.CalculateAssetBundleNameByStoneIndex(index);
 
@@ -112,7 +120,7 @@ public class StoneDetailsScript : MonoBehaviour
             metaText[2].text = khachkar.location;
             metaText[4].text = "Accessibility: " + khachkar.accessibility;
             metaText[6].text = "Production Period: " + khachkar.productionPeriod;
-            
+
         }
         catch (FormatException)
         {
@@ -138,7 +146,7 @@ public class StoneDetailsScript : MonoBehaviour
 
     private void FindStoneObject(string stoneName)
     {
-        foreach (GameObject obj in GameObject.FindObjectsOfType<GameObject>())
+        foreach (GameObject obj in GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None))
         {
             if (obj.name.Contains(stoneName))
             {

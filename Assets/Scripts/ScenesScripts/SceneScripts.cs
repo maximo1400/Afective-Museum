@@ -1,4 +1,4 @@
-﻿/*
+/*
     SceneScripts.cs
     
     @author Gabriel Azócar Cárcamo <azocarcarcamo@gmail.com>
@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System;
 using System.Text;
 using System.IO;
+using UnityEngine.InputSystem;
 
 public class SceneScripts : MonoBehaviour
 {
@@ -53,7 +54,6 @@ public class SceneScripts : MonoBehaviour
 
         if (StonesValues.stonesThumbs.Count == 0)
         {
-            Debug.Log("0000");
             StartCoroutine(this.stoneService.DownloadThumbs(this.constructAddStoneMenu));
         } 
         else
@@ -65,7 +65,7 @@ public class SceneScripts : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("e") && !StaticValues.writing)
+        if (Keyboard.current.eKey.wasPressedThisFrame && !StaticValues.writing)
         {
             StaticValues.back_from_details = true;
             Save(false);
@@ -172,17 +172,14 @@ public class SceneScripts : MonoBehaviour
         SaveGame.Load(f_name);
 
         // Clear stones in scene
-        object[] obj = FindObjectsOfType(typeof(GameObject));
+        object[] obj = FindObjectsByType(typeof(GameObject), FindObjectsSortMode.None);
         foreach (object o in obj)
         {
             GameObject g = (GameObject)o;
 
-            if (6 < g.name.Length)
+            if (g.name.StartsWith("Stone") && g.name.Length > 5 && char.IsDigit(g.name[5]))
             {
-                if (g.name.Substring(0, 5).Equals("Stone"))
-                {
-                    Destroy(g);
-                }
+                Destroy(g);
             }
         }
 
@@ -237,17 +234,14 @@ public class SceneScripts : MonoBehaviour
 
         SaveGame.Instance.Clear();
 
-        object[] obj = FindObjectsOfType(typeof(GameObject));
+        object[] obj = FindObjectsByType(typeof(GameObject), FindObjectsSortMode.None);
         foreach (object o in obj) {
             GameObject g = (GameObject)o;
-            if (6 < g.name.Length)
+            if (g.name.StartsWith("Stone") && g.name.Length > 5 && char.IsDigit(g.name[5]))
             {
-                if (g.name.Substring(0, 5).Equals("Stone"))
-                {
-                    SaveGame.Instance.StonesNames.Add(this.GetStoneIndex(g.name));
-                    SaveGame.Instance.StonesPositions.Add(g.transform.position);
-                    SaveGame.Instance.StonesRotations.Add(g.transform.rotation);
-                }
+                SaveGame.Instance.StonesNames.Add(this.GetStoneIndex(g.name));
+                SaveGame.Instance.StonesPositions.Add(g.transform.position);
+                SaveGame.Instance.StonesRotations.Add(g.transform.rotation);
             }
         }
 

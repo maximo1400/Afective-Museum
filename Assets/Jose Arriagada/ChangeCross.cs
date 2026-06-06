@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class CubeModelChanger : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class CubeModelChanger : MonoBehaviour
 
         if (fpc == null)
         {
-            fpc = FindObjectOfType<FirstPersonController>();
+            fpc = FindFirstObjectByType<FirstPersonController>();
             if (fpc == null)
                 Debug.LogWarning("No se encontró un FirstPersonController en la escena.");
         }
@@ -40,7 +41,7 @@ public class CubeModelChanger : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerInRange && !isCameraActive && Input.GetKeyDown(KeyCode.Q))
+        if (isPlayerInRange && !isCameraActive && Keyboard.current.qKey.wasPressedThisFrame)
         {
             ActivateCamera();
         }

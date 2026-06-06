@@ -1,3 +1,4 @@
+using UnityEngine.InputSystem;
 ﻿using UnityEngine;
 
 public class SelectionScript : MonoBehaviour
@@ -26,7 +27,7 @@ public class SelectionScript : MonoBehaviour
     // Update is called once per frame
     void LateUpdate() {
         if (tCamera != null) {
-            float scroll =  Input.GetAxis("Mouse ScrollWheel");
+            float scroll =  Mouse.current.scroll.ReadValue().y;
 
             if(scroll != 0.0f)
             {
@@ -39,17 +40,17 @@ public class SelectionScript : MonoBehaviour
             }
 
             // Moving camera
-            if (Input.GetMouseButtonDown(1))
+            if (Mouse.current.rightButton.wasPressedThisFrame)
             {
-                prevPos = Input.mousePosition;
+                prevPos = Mouse.current.position.ReadValue();
                 deltaHitdef.y = Mathf.Infinity;
             }
 
-            if (Input.GetMouseButton(1))
+            if (Mouse.current.rightButton.isPressed)
             {
 
                 RaycastHit hit;
-                Ray ray = tCamera.ScreenPointToRay(Input.mousePosition);
+                Ray ray = tCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
                 if (panning == false && selection == null && Physics.Raycast(ray, out hit, Mathf.Infinity, stoneMask))
                 {
@@ -60,38 +61,38 @@ public class SelectionScript : MonoBehaviour
                 }
                 else if (selection == null && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
                 {   // Clicking on terrain or anything else (move camera).
-                    delta = Input.mousePosition - prevPos;
+                    delta = (Vector3)Mouse.current.position.ReadValue() - prevPos;
                     //print(delta);
                     panPosition.x = delta.x * 0.1f;
                     panPosition.y = 0;
                     panPosition.z = delta.y * 0.1f;
                     tCamera.transform.position += panPosition;
                     panning = true;
-                    prevPos = Input.mousePosition;
+                    prevPos = Mouse.current.position.ReadValue();
                     rotation = null;
                     editStoneMenu.SetActive(false);
                 }
             }
 
-            if (Input.GetMouseButtonUp(1))
+            if (Mouse.current.rightButton.wasReleasedThisFrame)
             {
                 selection = null;
                 panning = false;
             }
 
             // Moving stone
-            if (Input.GetMouseButtonDown(0))
+            if (Mouse.current.leftButton.wasPressedThisFrame)
             {
-                prevPos = Input.mousePosition;
+                prevPos = Mouse.current.position.ReadValue();
                 deltaHitdef.y = Mathf.Infinity;
             }
 
-            if (Input.GetMouseButton(0))
+            if (Mouse.current.leftButton.isPressed)
             {
 
                 RaycastHit hit;
                 RaycastHit terrainHit;
-                Ray ray = tCamera.ScreenPointToRay(Input.mousePosition);
+                Ray ray = tCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
                 
                 if (panning == false && selection == null && Physics.Raycast(ray, out hit, Mathf.Infinity, stoneMask))
                 {
@@ -129,7 +130,7 @@ public class SelectionScript : MonoBehaviour
                 }
             }
 
-            if (Input.GetMouseButtonUp(0))
+            if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
                 selection = null;
                 panning = false;

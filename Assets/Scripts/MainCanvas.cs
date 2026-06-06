@@ -1,3 +1,4 @@
+using UnityEngine.InputSystem;
 ﻿using UnityEngine;
 
 public class MainCanvas : MonoBehaviour
@@ -12,7 +13,7 @@ public class MainCanvas : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown("h"))
+        if (Keyboard.current.hKey.wasPressedThisFrame)
         {
 
             helpPane.SetActive(!helpPane.activeSelf);

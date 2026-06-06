@@ -47,3 +47,11 @@ info.txt
 
 #Assets/Jose Arriagada/models/Aruch/
 #Assets/Jose Arriagada/models/small3/
+
+# ================= #
+# Newer Unity added #
+# ================= #
+Logs/
+UserSettings/
+.vscode/
+*.slnx
