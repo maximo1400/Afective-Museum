@@ -1,68 +1,68 @@
 ManifestFileVersion: 0
-UnityVersion: 6000.3.16f1
-CRC: 3921048627
+UnityVersion: 6000.3.17f1
+CRC: 1425246170
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1cc93b16e2f0a7bc392f6da5ce33e6d9
+    Hash: 82fc95e23fcf9eb6a9de575128ba9b33
   TypeTreeHash:
     serializedVersion: 2
     Hash: 1cfddeea06ce0ec573e0d0ec81ebe20e
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: ae8d79981263de284f8e5679d9b72a1a
+    Hash: 62b731216b7edbc3e103a79406a01cf9
 HashAppended: 0
 ClassTypes:
 - Class: 28
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Thumbs/AllStones/39.png
-- Assets/Thumbs/AllStones/35.png
-- Assets/Thumbs/AllStones/11.png
-- Assets/Thumbs/AllStones/14.png
-- Assets/Thumbs/AllStones/43.jpg
-- Assets/Thumbs/AllStones/32.png
-- Assets/Thumbs/AllStones/47.png
-- Assets/Thumbs/AllStones/46.png
-- Assets/Thumbs/AllStones/7.png
-- Assets/Thumbs/AllStones/27.png
-- Assets/Thumbs/AllStones/19.png
-- Assets/Thumbs/AllStones/44.png
-- Assets/Thumbs/AllStones/13.png
-- Assets/Thumbs/AllStones/34.png
-- Assets/Thumbs/AllStones/5.png
-- Assets/Thumbs/AllStones/31.png
-- Assets/Thumbs/AllStones/21.png
-- Assets/Thumbs/AllStones/17.png
-- Assets/Thumbs/AllStones/4.png
-- Assets/Thumbs/AllStones/20.png
-- Assets/Thumbs/AllStones/45.png
-- Assets/Thumbs/AllStones/18.png
-- Assets/Thumbs/AllStones/1.png
-- Assets/Thumbs/AllStones/26.png
-- Assets/Thumbs/AllStones/29.png
-- Assets/Thumbs/AllStones/40.png
-- Assets/Thumbs/AllStones/6.jpg
-- Assets/Thumbs/AllStones/48.png
-- Assets/Thumbs/AllStones/2.png
-- Assets/Thumbs/AllStones/16.png
-- Assets/Thumbs/AllStones/10.png
-- Assets/Thumbs/AllStones/9.png
-- Assets/Thumbs/AllStones/49.png
-- Assets/Thumbs/AllStones/33.png
-- Assets/Thumbs/AllStones/28.png
-- Assets/Thumbs/AllStones/24.png
-- Assets/Thumbs/AllStones/23.png
-- Assets/Thumbs/AllStones/22.png
-- Assets/Thumbs/AllStones/41.png
-- Assets/Thumbs/AllStones/42.png
-- Assets/Thumbs/AllStones/25.png
-- Assets/Thumbs/AllStones/12.png
-- Assets/Thumbs/AllStones/38.png
-- Assets/Thumbs/AllStones/36.png
-- Assets/Thumbs/AllStones/3.png
-- Assets/Thumbs/AllStones/30.png
-- Assets/Thumbs/AllStones/15.png
-- Assets/Thumbs/AllStones/37.png
+- Assets/Legacy_Assets/Thumbs/AllStones/39.png
+- Assets/Legacy_Assets/Thumbs/AllStones/35.png
+- Assets/Legacy_Assets/Thumbs/AllStones/11.png
+- Assets/Legacy_Assets/Thumbs/AllStones/14.png
+- Assets/Legacy_Assets/Thumbs/AllStones/43.jpg
+- Assets/Legacy_Assets/Thumbs/AllStones/32.png
+- Assets/Legacy_Assets/Thumbs/AllStones/47.png
+- Assets/Legacy_Assets/Thumbs/AllStones/46.png
+- Assets/Legacy_Assets/Thumbs/AllStones/7.png
+- Assets/Legacy_Assets/Thumbs/AllStones/27.png
+- Assets/Legacy_Assets/Thumbs/AllStones/19.png
+- Assets/Legacy_Assets/Thumbs/AllStones/44.png
+- Assets/Legacy_Assets/Thumbs/AllStones/13.png
+- Assets/Legacy_Assets/Thumbs/AllStones/34.png
+- Assets/Legacy_Assets/Thumbs/AllStones/5.png
+- Assets/Legacy_Assets/Thumbs/AllStones/31.png
+- Assets/Legacy_Assets/Thumbs/AllStones/21.png
+- Assets/Legacy_Assets/Thumbs/AllStones/17.png
+- Assets/Legacy_Assets/Thumbs/AllStones/4.png
+- Assets/Legacy_Assets/Thumbs/AllStones/20.png
+- Assets/Legacy_Assets/Thumbs/AllStones/45.png
+- Assets/Legacy_Assets/Thumbs/AllStones/18.png
+- Assets/Legacy_Assets/Thumbs/AllStones/1.png
+- Assets/Legacy_Assets/Thumbs/AllStones/26.png
+- Assets/Legacy_Assets/Thumbs/AllStones/29.png
+- Assets/Legacy_Assets/Thumbs/AllStones/40.png
+- Assets/Legacy_Assets/Thumbs/AllStones/6.jpg
+- Assets/Legacy_Assets/Thumbs/AllStones/48.png
+- Assets/Legacy_Assets/Thumbs/AllStones/2.png
+- Assets/Legacy_Assets/Thumbs/AllStones/16.png
+- Assets/Legacy_Assets/Thumbs/AllStones/10.png
+- Assets/Legacy_Assets/Thumbs/AllStones/9.png
+- Assets/Legacy_Assets/Thumbs/AllStones/49.png
+- Assets/Legacy_Assets/Thumbs/AllStones/33.png
+- Assets/Legacy_Assets/Thumbs/AllStones/28.png
+- Assets/Legacy_Assets/Thumbs/AllStones/24.png
+- Assets/Legacy_Assets/Thumbs/AllStones/23.png
+- Assets/Legacy_Assets/Thumbs/AllStones/22.png
+- Assets/Legacy_Assets/Thumbs/AllStones/41.png
+- Assets/Legacy_Assets/Thumbs/AllStones/42.png
+- Assets/Legacy_Assets/Thumbs/AllStones/25.png
+- Assets/Legacy_Assets/Thumbs/AllStones/12.png
+- Assets/Legacy_Assets/Thumbs/AllStones/38.png
+- Assets/Legacy_Assets/Thumbs/AllStones/36.png
+- Assets/Legacy_Assets/Thumbs/AllStones/3.png
+- Assets/Legacy_Assets/Thumbs/AllStones/30.png
+- Assets/Legacy_Assets/Thumbs/AllStones/15.png
+- Assets/Legacy_Assets/Thumbs/AllStones/37.png
 Dependencies: []

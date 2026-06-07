@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
-UnityVersion: 6000.3.16f1
-CRC: 4123843267
+UnityVersion: 6000.3.17f1
+CRC: 2244934972
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b8920ccb9df9b32325a9e095cb00a9b0
+    Hash: 3119e3ceb490e82c4fc5801b45df2d48
   TypeTreeHash:
     serializedVersion: 2
     Hash: 3b43ebf7b1047f5e676e60a96f62680f
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: d907ca93c4c1a4eb2a77e0e0f42b164b
+    Hash: 64a350ebf4dbc4097909e794bc75f962
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -41,9 +41,6 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Prefabs/Stones/Stone28.prefab
 - Assets/Prefabs/Stones/Stone30.prefab
-- Assets/Prefabs/Stones/Stone27.prefab
 - Assets/Prefabs/Stones/Stone26.prefab
-- Assets/Prefabs/Stones/Stone29.prefab
 Dependencies: []
