@@ -1,0 +1,1 @@
+If files from this folder are needed, move /Legacy_Assets/ to /Assets/ and run the undo-declutter script(tools /> ProjectDeclutterTool).

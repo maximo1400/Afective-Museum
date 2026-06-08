@@ -1,24 +1,24 @@
 ManifestFileVersion: 0
-UnityVersion: 6000.3.16f1
-CRC: 1650904687
+UnityVersion: 6000.3.17f1
+CRC: 225197208
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 50b0c8ba5329be7bd77e66bcd2b86b35
+    Hash: 3ffca9250c8f95b704d941496a129ad6
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 39595bd1a926630899e347248c473394
+    Hash: 4b8d6d60a2c50c92351db5beeb95f018
 HashAppended: 0
 ClassTypes:
 - Class: 49
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Prefabs/StonesMetadata/Stone6.json
-- Assets/Prefabs/StonesMetadata/Stone9.json
-- Assets/Prefabs/StonesMetadata/Stone10.json
-- Assets/Prefabs/StonesMetadata/Stone7.json
+- Assets/Legacy_Assets/Prefabs/StonesMetadata/Stone6.json
+- Assets/Legacy_Assets/Prefabs/StonesMetadata/Stone9.json
+- Assets/Legacy_Assets/Prefabs/StonesMetadata/Stone10.json
+- Assets/Legacy_Assets/Prefabs/StonesMetadata/Stone7.json
 Dependencies: []

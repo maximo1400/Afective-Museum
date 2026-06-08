@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
-UnityVersion: 6000.3.16f1
-CRC: 66853330
+UnityVersion: 6000.3.17f1
+CRC: 3324364890
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e4ab6a2aefe1b8514981a3f6aa9a4ac9
+    Hash: 232ef59309f4578397d3dbf296827298
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 96cfa4fcdd76515668e69a6247543a67
+    Hash: 95fcc49bea9561007c79bdf2ad78e2e1
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 9abd2672b6fa8dde5d99a18f78ec7878
+    Hash: f74c2b7a4f902621acca121aa74b38c7
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -29,16 +29,7 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
-- Class: 154
-  Script: {instanceID: 0}
-- Class: 156
-  Script: {instanceID: 0}
-- Class: 218
-  Script: {instanceID: 0}
-- Class: 1953259897
-  Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Prefabs/Terrains And Buildings/WallTerrain.prefab
 - Assets/Prefabs/Terrains And Buildings/Walls.prefab
 Dependencies: []
