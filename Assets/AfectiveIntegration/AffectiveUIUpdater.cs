@@ -21,7 +21,7 @@ public class AffectiveUIUpdater : MonoBehaviour
     {
         // Determine if we are connected to the actual python server
         bool isConnected = tcpClient != null && tcpClient.IsConnected;
-        
+
         // Toggle the brain image visibility based on connection status
         if (brainImageObject != null && brainImageObject.activeSelf != isConnected)
         {
@@ -42,13 +42,11 @@ public class AffectiveUIUpdater : MonoBehaviour
 
     public void ShowLowValenceWarning()
     {
-        Debug.Log("Low Valence Detected!");
-        // Change an image color, show a warning text, etc.
+        // Debug.Log("Low Valence Detected!");
     }
 
     public void ShowHighArousalWarning()
     {
-        Debug.Log("High Arousal Detected!");
-        // Change an image color, show a warning text, etc.
+        // Debug.Log("High Arousal Detected!");
     }
 }

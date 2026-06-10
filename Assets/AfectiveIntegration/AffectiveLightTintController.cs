@@ -13,16 +13,13 @@ public class AffectiveLightTintController : MonoBehaviour
     [Header("Light Settings (DISABLED)")]
     public Light targetLight;
     public float baseIntensity = 1f;
-    public float maxIntensityMult = 5.0f; // Boosted to make it obvious
+    public float maxIntensityMult = 10.0f; // Boosted to make it obvious
     public float minIntensityMult = 0.2f;
 
     [Header("Color Settings")]
     public Color highValenceColor = Color.green; // Extremely obvious
     public Color lowValenceColor = Color.red;    // Extremely obvious
     public Color neutralColor = Color.white;
-
-    [Header("Global Ambient Settings (DISABLED)")]
-    public bool affectGlobalAmbientLight = false;
 
     private float targetIntensity;
     private Color targetColor;
@@ -39,7 +36,7 @@ public class AffectiveLightTintController : MonoBehaviour
         {
             if (FindAnyObjectByType<AffectiveLightTintController>() == null)
             {
-                GameObject go = new GameObject("ValenceLightingController");
+                GameObject go = new GameObject("AffectiveLightTintController");
                 go.AddComponent<AffectiveLightTintController>();
             }
         }
@@ -62,7 +59,7 @@ public class AffectiveLightTintController : MonoBehaviour
         // Subscribe to AffectiveManager if it exists
         if (AffectiveManager.Instance != null)
         {
-            Debug.Log("AffectiveLightController: Successfully subscribed to AffectiveManager.");
+            // Debug.Log("AffectiveLightController: Successfully subscribed to AffectiveManager.");
             AffectiveManager.Instance.OnEmotionDataReceived.AddListener(UpdateLightingParameters);
         }
         else
@@ -73,12 +70,6 @@ public class AffectiveLightTintController : MonoBehaviour
 
     private void UpdateLightingParameters(TcpSocketClient.EmotionData data)
     {
-        if (fullScreenOverlay == null)
-        {
-            Debug.LogWarning("AffectiveLightController: Full Screen Overlay is NULL! Please assign the UI Image in the Inspector.");
-            return;
-        }
-
         // Map Arousal (-1 to 1) to Intensity multiplier
         float arousalNormalized = Mathf.Clamp01((data.smoothed_arousal + 1f) / 2f);
         float intensityMult = Mathf.Lerp(minIntensityMult, maxIntensityMult, arousalNormalized);
@@ -94,7 +85,7 @@ public class AffectiveLightTintController : MonoBehaviour
             targetColor = Color.Lerp(neutralColor, lowValenceColor, -data.smoothed_valence);
         }
 
-        Debug.Log($"AffectiveLightController: Received Data -> Arousal: {data.smoothed_arousal}, Valence: {data.smoothed_valence} | Target Intensity: {targetIntensity}");
+        // Debug.Log($"AffectiveLightController: Received Data -> Arousal: {data.smoothed_arousal}, Valence: {data.smoothed_valence} | Target Intensity: {targetIntensity}");
     }
 
     void Update()
@@ -112,10 +103,10 @@ public class AffectiveLightTintController : MonoBehaviour
 
             // Apply the color to the UI overlay but keep it slightly transparent
             Color overlayColor = targetColor;
-            
+
             // Map arousal to opacity (higher arousal = stronger tint)
             overlayColor.a = Mathf.Lerp(0f, maxOverlayOpacity, targetIntensity / maxIntensityMult);
-            
+
             fullScreenOverlay.color = Color.Lerp(fullScreenOverlay.color, overlayColor, Time.deltaTime * 2f);
         }
     }
