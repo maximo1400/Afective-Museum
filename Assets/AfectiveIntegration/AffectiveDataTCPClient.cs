@@ -10,6 +10,7 @@ public class TcpSocketClient : MonoBehaviour
     public string host = "127.0.0.1";
     public int port = 65432;
     public float reconnectDelay = 2f;
+
     [System.Serializable]
     public class EmotionData
     {
@@ -21,7 +22,7 @@ public class TcpSocketClient : MonoBehaviour
         public float timestamp;
     }
 
-    private EmotionData latestData;
+    public EmotionData latestData;
     private readonly object dataLock = new object();
 
     public EmotionData LatestData
@@ -40,12 +41,15 @@ public class TcpSocketClient : MonoBehaviour
     private Thread clientThread;
     private bool isRunning = false;
     private bool isConnected = false;
+    public bool IsConnected => isConnected;
 
     void Start()
     {
         isRunning = true;
-        clientThread = new Thread(new ThreadStart(ClientLoop));
-        clientThread.IsBackground = true;
+        clientThread = new Thread(ClientLoop)
+        {
+            IsBackground = true
+        };
         clientThread.Start();
     }
 
@@ -64,6 +68,14 @@ public class TcpSocketClient : MonoBehaviour
                 while (isRunning && isConnected)
                 {
                     int length = stream.Read(bytes, 0, bytes.Length);
+                    
+                    // If length is 0, the server closed the connection
+                    if (length == 0)
+                    {
+                        Debug.Log("TCP Server disconnected.");
+                        break;
+                    }
+
                     var incomingData = new byte[length];
                     Array.Copy(bytes, 0, incomingData, 0, length);
                     string serverMessage = Encoding.UTF8.GetString(incomingData);
@@ -83,35 +95,22 @@ public class TcpSocketClient : MonoBehaviour
             finally
             {
                 isConnected = false;
-                if (stream != null) { stream.Close(); stream = null; }
-                if (client != null) { client.Close(); client = null; }
+                if (stream != null)
+                {
+                    stream.Close();
+                    stream = null;
+                }
+                if (client != null)
+                {
+                    client.Close();
+                    client = null;
+                }
 
                 if (isRunning)
                 {
                     Thread.Sleep(TimeSpan.FromSeconds(reconnectDelay));
                 }
             }
-        }
-    }
-
-    public void SendData(string message)
-    {
-        if (client == null || !isConnected || stream == null)
-        {
-            Debug.LogWarning("Cannot send data, TCP client is not connected.");
-            return;
-        }
-
-        try
-        {
-            byte[] clientMessageAsByteArray = Encoding.UTF8.GetBytes(message);
-            stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
-            Debug.Log("TCP message sent");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Socket exception: {e}");
-            isConnected = false; // Mark disconnected so we reconnect
         }
     }
 
