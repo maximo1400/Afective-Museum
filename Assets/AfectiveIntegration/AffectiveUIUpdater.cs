@@ -19,20 +19,6 @@ public class AffectiveUIUpdater : MonoBehaviour
 
     private void Update()
     {
-        // Determine if text should be shown (only if mockData exists and is enabled)
-        bool shouldShowMockText = mockData != null && mockData.isEnabled;
-
-        // Only update the active state if it needs to change (saves performance)
-        if (valenceText != null && valenceText.gameObject.activeSelf != shouldShowMockText)
-        {
-            valenceText.gameObject.SetActive(shouldShowMockText);
-        }
-        
-        if (arousalText != null && arousalText.gameObject.activeSelf != shouldShowMockText)
-        {
-            arousalText.gameObject.SetActive(shouldShowMockText);
-        }
-
         // Determine if we are connected to the actual python server
         bool isConnected = tcpClient != null && tcpClient.IsConnected;
         
@@ -46,12 +32,12 @@ public class AffectiveUIUpdater : MonoBehaviour
     // This matches the FloatEvent signature in AffectiveManager
     public void UpdateValenceDisplay(float valenceValue)
     {
-        valenceText.text = $"Valence: {valenceValue:F2}";
+        // valenceText.text = $"Valence: {valenceValue:F2}";
     }
 
     public void UpdateArousalDisplay(float arousalValue)
     {
-        arousalText.text = $"Arousal: {arousalValue:F2}";
+        // arousalText.text = $"Arousal: {arousalValue:F2}";
     }
 
     public void ShowLowValenceWarning()
