@@ -19,9 +19,34 @@ public class MockAffectiveData : MonoBehaviour
     private float timer = 0f;
     private TcpSocketClient TcpClient;
 
+    private bool shouldShowGUI = false;
+    private GUIStyle guiStyle;
+
     void Start()
     {
         TcpClient = FindFirstObjectByType<TcpSocketClient>();
+        UpdateSceneCheck(SceneManager.GetActiveScene());
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        UpdateSceneCheck(scene);
+    }
+
+    private void UpdateSceneCheck(UnityEngine.SceneManagement.Scene scene)
+    {
+        string sceneName = scene.name.ToLower();
+        shouldShowGUI = !(sceneName.Contains("mainmenu") || sceneName.Contains("book"));
     }
 
     void Update()
@@ -67,20 +92,21 @@ public class MockAffectiveData : MonoBehaviour
 
     void OnGUI()
     {
-        if (!isEnabled) return;
+        if (!isEnabled || !shouldShowGUI) return;
 
-        string sceneName = SceneManager.GetActiveScene().name.ToLower();
-        if (sceneName.Contains("mainmenu") || sceneName.Contains("book")) return;
-
-        GUIStyle style = new GUIStyle(GUI.skin.label);
-        style.fontSize = 24;
-        style.normal.textColor = Color.white;
-        style.alignment = TextAnchor.UpperLeft;
+        // Cache the style so we don't create a new object every frame
+        if (guiStyle == null)
+        {
+            guiStyle = new GUIStyle(GUI.skin.label);
+            guiStyle.fontSize = 24;
+            guiStyle.normal.textColor = Color.white;
+            guiStyle.alignment = TextAnchor.UpperLeft;
+        }
 
         GUILayout.BeginArea(new Rect(Screen.width - 300, 10, 400, 200));
-        GUILayout.Label("Mock Data Controls:", style);
-        GUILayout.Label("U / J : Adjust Valence (" + simulatedValence.ToString("F1") + ")", style);
-        GUILayout.Label("I / K : Adjust Arousal (" + simulatedArousal.ToString("F1") + ")", style);
+        GUILayout.Label("Affective Data Controls:", guiStyle);
+        GUILayout.Label("U / J : Adjust Valence (" + simulatedValence.ToString("F1") + ")", guiStyle);
+        GUILayout.Label("I / K : Adjust Arousal (" + simulatedArousal.ToString("F1") + ")", guiStyle);
         GUILayout.EndArea();
     }
 }
