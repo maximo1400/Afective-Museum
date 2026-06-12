@@ -585,9 +585,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 714a9e48cee0df84bbceded261c8b98f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MockAffectiveData
-  simulatedValence: 0
-  simulatedArousal: 0
-  simulatedConfidence: 1
+  simulatedValence: 2
+  simulatedArousal: 2
+  simulatedConfidence: 0.5
   isEnabled: 1
   updateInterval: 0.125
 --- !u!114 &300219397

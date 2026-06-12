@@ -6,15 +6,15 @@ public class MockAffectiveData : MonoBehaviour
 {
     [Header("Simulated Emotion Data")]
     [Range(0f, 4f)]
-    public float simulatedValence = 0f;
+    [SerializeField] private float simulatedValence = 2f;
     [Range(0f, 4f)]
-    public float simulatedArousal = 0f;
+    [SerializeField] private float simulatedArousal = 2f;
     [Range(0f, 1f)]
     public float simulatedConfidence = 1f;
 
     [Header("Settings")]
-    public bool isEnabled = false;
-    public float updateInterval = 0.125f; // 8Hz
+    [SerializeField] private bool isEnabled = false;
+    private float updateInterval = 0.125f; // 8Hz
 
     private float timer = 0f;
     private TcpSocketClient TcpClient;
