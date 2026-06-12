@@ -1,32 +1,53 @@
 using UnityEngine;
 using System.IO;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class AffectiveExperienceController : MonoBehaviour
 {
     [Header("Screenshot Settings")]
-    public float highIntensityThreshold = 0.8f;
-    public float screenshotCooldown = 10f;
-    private float lastScreenshotTime = -100f;
-    
+    private float highIntensityThreshold = 3f;
+    private float screenshotCooldown = 10f;
+    private float firstScreenshotTime = 10f;
+    private float lastScreenshotTime;
+
     [Header("Lost Player Settings")]
-    public float lostValenceThreshold = 1f;
-    public float lostTimeThreshold = 30f;
+    private float lostValenceThreshold = 1f;
+    private float lostTimeThreshold = 30f;
     private float timeInNegativeValence = 0f;
-    
+
     // Position tracking to check if player is actually lost/stuck
-    public Transform playerTransform;
-    public float movementThreshold = 2.0f;
+    private Transform playerTransform;
+    [SerializeField] private float movementThreshold;
     private Vector3 lastRecordedPosition;
     private float timeStuck = 0f;
+    private string sessionStartTimeStr;
+    private float lastPacketTime;
+    private float timeSinceLastPacket;
 
     void Start()
     {
+        lastScreenshotTime = Time.time + firstScreenshotTime; // Delay first screenshot to give player time to settle in
+        sessionStartTimeStr = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        lastPacketTime = Time.time;
+
         if (AffectiveManager.Instance != null)
         {
             AffectiveManager.Instance.OnEmotionDataReceived.AddListener(CheckExperienceTriggers);
         }
 
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        FindPlayerTransform();
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        FindPlayerTransform();
+    }
+
+    private void FindPlayerTransform()
+    {
+        // Unity's == null check will evaluate to true if the previous playerTransform was destroyed on scene load
         if (playerTransform == null && Camera.main != null)
         {
             playerTransform = Camera.main.transform;
@@ -35,6 +56,7 @@ public class AffectiveExperienceController : MonoBehaviour
         if (playerTransform != null)
         {
             lastRecordedPosition = playerTransform.position;
+            timeStuck = 0f; // Reset stuck time for new scene
         }
     }
 
@@ -52,8 +74,12 @@ public class AffectiveExperienceController : MonoBehaviour
 
     private void TakeIntensityScreenshot(TcpSocketClient.EmotionData data)
     {
+        if (!AffectiveManager.IsAffectiveSceneActive) return;
+
         lastScreenshotTime = Time.time;
-        string folderPath = Path.Combine(Application.dataPath, "../AffectiveReports");
+        string baseFolderPath = Path.Combine(Application.dataPath, "../AffectiveReports/");
+        string folderPath = Path.Combine(baseFolderPath, $"Session_{sessionStartTimeStr}");
+
         if (!Directory.Exists(folderPath))
         {
             Directory.CreateDirectory(folderPath);
@@ -64,24 +90,29 @@ public class AffectiveExperienceController : MonoBehaviour
         string reportPath = Path.Combine(folderPath, $"Intensity_Report_{timestampStr}.txt");
 
         ScreenCapture.CaptureScreenshot(screenshotPath);
-        
+
         string reportContent = $"High Intensity Event Logged at {System.DateTime.Now}\n" +
                                $"Valence: {data.smoothed_valence}\n" +
                                $"Arousal: {data.smoothed_arousal}\n" +
                                $"Confidence: {data.confidence}";
-                               
+
         File.WriteAllText(reportPath, reportContent);
         Debug.Log($"High Intensity Event! Screenshot saved to: {screenshotPath}");
     }
 
     private void CheckLostState(TcpSocketClient.EmotionData data)
     {
+        if (!AffectiveManager.IsAffectiveSceneActive) return;
+
         if (playerTransform == null) return;
+
+        timeSinceLastPacket = Time.time - lastPacketTime;
+        lastPacketTime = Time.time;
 
         // Check if player has barely moved
         if (Vector3.Distance(playerTransform.position, lastRecordedPosition) < movementThreshold)
         {
-            timeStuck += Time.deltaTime;
+            timeStuck += timeSinceLastPacket;
         }
         else
         {
@@ -92,7 +123,7 @@ public class AffectiveExperienceController : MonoBehaviour
         // Check if player is frustrated (negative valence)
         if (data.smoothed_valence <= lostValenceThreshold)
         {
-            timeInNegativeValence += Time.deltaTime;
+            timeInNegativeValence += timeSinceLastPacket;
         }
         else
         {
@@ -122,5 +153,6 @@ public class AffectiveExperienceController : MonoBehaviour
         {
             AffectiveManager.Instance.OnEmotionDataReceived.RemoveListener(CheckExperienceTriggers);
         }
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
