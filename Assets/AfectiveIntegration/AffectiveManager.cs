@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class AffectiveManager : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class AffectiveManager : MonoBehaviour
     private float lastTimestamp = -1f;
 
     public static AffectiveManager Instance { get; private set; }
+    public static bool IsAffectiveSceneActive { get; private set; }
 
     private void Awake()
     {
@@ -33,11 +35,33 @@ public class AffectiveManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            IsAffectiveSceneActive = IsAffectiveScene(SceneManager.GetActiveScene().name);
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        IsAffectiveSceneActive = IsAffectiveScene(scene.name);
+    }
+
+    public static bool IsAffectiveScene(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName)) return false;
+        string lowerName = sceneName.ToLower();
+        return !(lowerName.Contains("mainmenu") || lowerName.Contains("book"));
     }
 
     private void Start()

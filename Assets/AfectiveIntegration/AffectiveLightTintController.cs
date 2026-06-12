@@ -32,7 +32,7 @@ public class AffectiveLightTintController : MonoBehaviour
 
     static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
-        if (scene.name != "MainMenu" && scene.name != "Book")
+        if (AffectiveManager.IsAffectiveScene(scene.name))
         {
             if (FindAnyObjectByType<AffectiveLightTintController>() == null)
             {
@@ -93,8 +93,7 @@ public class AffectiveLightTintController : MonoBehaviour
         // Only update the UI Overlay now, Lights and Ambient are disabled by request
         if (fullScreenOverlay != null)
         {
-            string sceneName = SceneManager.GetActiveScene().name;
-            if (sceneName == "MainMenu" || sceneName == "Book")
+            if (!AffectiveManager.IsAffectiveSceneActive)
             {
                 // Keep it completely transparent and colorless in these scenes
                 fullScreenOverlay.color = new Color(1f, 1f, 1f, 0f);

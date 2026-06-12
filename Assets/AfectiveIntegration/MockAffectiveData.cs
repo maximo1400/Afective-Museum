@@ -18,35 +18,11 @@ public class MockAffectiveData : MonoBehaviour
 
     private float timer = 0f;
     private TcpSocketClient TcpClient;
-
-    private bool shouldShowGUI = false;
     private GUIStyle guiStyle;
 
     void Start()
     {
         TcpClient = FindFirstObjectByType<TcpSocketClient>();
-        UpdateSceneCheck(SceneManager.GetActiveScene());
-    }
-
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
-    {
-        UpdateSceneCheck(scene);
-    }
-
-    private void UpdateSceneCheck(UnityEngine.SceneManagement.Scene scene)
-    {
-        string sceneName = scene.name.ToLower();
-        shouldShowGUI = !(sceneName.Contains("mainmenu") || sceneName.Contains("book"));
     }
 
     void Update()
@@ -92,7 +68,7 @@ public class MockAffectiveData : MonoBehaviour
 
     void OnGUI()
     {
-        if (!isEnabled || !shouldShowGUI) return;
+        if (!isEnabled || !AffectiveManager.IsAffectiveSceneActive) return;
 
         // Cache the style so we don't create a new object every frame
         if (guiStyle == null)
