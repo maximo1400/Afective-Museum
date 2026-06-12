@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class AffectiveUIUpdater : MonoBehaviour
 {
@@ -10,17 +11,37 @@ public class AffectiveUIUpdater : MonoBehaviour
     private MockAffectiveData mockData;
     private TcpSocketClient tcpClient;
 
+    private string currentSceneName;
+
     private void Start()
     {
         // Find the Mock script and TCP client in the scene
         mockData = FindFirstObjectByType<MockAffectiveData>();
         tcpClient = FindFirstObjectByType<TcpSocketClient>();
+        currentSceneName = SceneManager.GetActiveScene().name;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        currentSceneName = scene.name;
     }
 
     private void Update()
     {
         // Determine if we are connected to the actual python server
         bool isConnected = tcpClient != null && tcpClient.IsConnected;
+
+        if (currentSceneName == "Book") isConnected = false;
 
         // Toggle the brain image visibility based on connection status
         if (brainImageObject != null && brainImageObject.activeSelf != isConnected)
