@@ -2,8 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class MockAffectiveData : MonoBehaviour
-{
+public class MockAffectiveData : MonoBehaviour {
     [Header("Simulated Emotion Data")]
     [Range(0f, 4f)]
     [SerializeField] private float simulatedValence = 2f;
@@ -20,19 +19,16 @@ public class MockAffectiveData : MonoBehaviour
     private TcpSocketClient TcpClient;
     private GUIStyle guiStyle;
 
-    void Start()
-    {
+    void Start() {
         TcpClient = FindFirstObjectByType<TcpSocketClient>();
     }
 
-    void Update()
-    {
+    void Update() {
         if (!isEnabled) return;
 
         // Keyboard controls for simulated data using the new Input System
         float step = 0.5f;
-        if (Keyboard.current != null)
-        {
+        if (Keyboard.current != null) {
             if (Keyboard.current.uKey.wasPressedThisFrame)
                 simulatedValence = Mathf.Clamp(simulatedValence + step, 0f, 4f);
             if (Keyboard.current.jKey.wasPressedThisFrame)
@@ -44,13 +40,11 @@ public class MockAffectiveData : MonoBehaviour
         }
 
         timer += Time.deltaTime;
-        if (timer >= updateInterval)
-        {
+        if (timer >= updateInterval) {
             timer = 0f;
 
             // Create a fake EmotionData object
-            var data = new TcpSocketClient.EmotionData
-            {
+            var data = new TcpSocketClient.EmotionData {
                 raw_valence = simulatedValence,
                 raw_arousal = simulatedArousal,
                 smoothed_valence = simulatedValence,
@@ -59,20 +53,17 @@ public class MockAffectiveData : MonoBehaviour
                 timestamp = Time.time
             };
 
-            if (TcpClient != null)
-            {
+            if (TcpClient != null) {
                 TcpClient.latestData = data;
             }
         }
     }
 
-    void OnGUI()
-    {
+    void OnGUI() {
         if (!isEnabled || !AffectiveManager.IsAffectiveSceneActive) return;
 
         // Cache the style so we don't create a new object every frame
-        if (guiStyle == null)
-        {
+        if (guiStyle == null) {
             guiStyle = new GUIStyle(GUI.skin.label);
             guiStyle.fontSize = 24;
             guiStyle.normal.textColor = Color.white;

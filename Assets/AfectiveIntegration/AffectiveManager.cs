@@ -2,8 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class AffectiveManager : MonoBehaviour
-{
+public class AffectiveManager : MonoBehaviour {
     [System.Serializable]
     public class EmotionDataEvent : UnityEvent<TcpSocketClient.EmotionData> { }
 
@@ -29,57 +28,45 @@ public class AffectiveManager : MonoBehaviour
     public static AffectiveManager Instance { get; private set; }
     public static bool IsAffectiveSceneActive { get; private set; }
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
+    private void Awake() {
+        if (Instance == null) {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
             IsAffectiveSceneActive = IsAffectiveScene(SceneManager.GetActiveScene().name);
-        }
-        else
-        {
+        } else {
             Destroy(gameObject);
         }
     }
 
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
+    private void OnDestroy() {
+        if (Instance == this) {
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
     }
 
-    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
-    {
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode) {
         IsAffectiveSceneActive = IsAffectiveScene(scene.name);
     }
 
-    public static bool IsAffectiveScene(string sceneName)
-    {
+    public static bool IsAffectiveScene(string sceneName) {
         if (string.IsNullOrEmpty(sceneName)) return false;
         string lowerName = sceneName.ToLower();
         return !(lowerName.Contains("mainmenu") || lowerName.Contains("book"));
     }
 
-    private void Start()
-    {
+    private void Start() {
         tcpClient = FindFirstObjectByType<TcpSocketClient>();
-        if (tcpClient == null)
-        {
+        if (tcpClient == null) {
             Debug.LogWarning("AffectiveManager: No TcpSocketClient found in the scene.");
         }
     }
 
-    private void Update()
-    {
+    private void Update() {
         if (tcpClient == null) return;
 
         var data = tcpClient.LatestData;
-        if (data != null && data.timestamp != lastTimestamp)
-        {
+        if (data != null && data.timestamp != lastTimestamp) {
             lastTimestamp = data.timestamp;
 
             // Fire generic data events
@@ -88,13 +75,11 @@ public class AffectiveManager : MonoBehaviour
             OnArousalChanged?.Invoke(data.smoothed_arousal);
 
             // Fire threshold events
-            if (data.smoothed_arousal > highArousalThreshold)
-            {
+            if (data.smoothed_arousal > highArousalThreshold) {
                 OnHighArousal?.Invoke();
             }
 
-            if (data.smoothed_valence < negativeValenceThreshold)
-            {
+            if (data.smoothed_valence < negativeValenceThreshold) {
                 OnNegativeValence?.Invoke();
             }
         }

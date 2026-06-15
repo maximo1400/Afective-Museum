@@ -3,8 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
-public class AffectiveLightTintController : MonoBehaviour
-{
+public class AffectiveLightTintController : MonoBehaviour {
     [Header("UI Overlay Settings (For Menus)")]
     public Image fullScreenOverlay;
     [Range(0f, 1f)]
@@ -25,76 +24,58 @@ public class AffectiveLightTintController : MonoBehaviour
     private Color targetColor;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    static void OnLoad()
-    {
+    static void OnLoad() {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
-    {
-        if (AffectiveManager.IsAffectiveScene(scene.name))
-        {
-            if (FindAnyObjectByType<AffectiveLightTintController>() == null)
-            {
+    static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode) {
+        if (AffectiveManager.IsAffectiveScene(scene.name)) {
+            if (FindAnyObjectByType<AffectiveLightTintController>() == null) {
                 GameObject go = new GameObject("AffectiveLightTintController");
                 go.AddComponent<AffectiveLightTintController>();
             }
         }
     }
 
-    void Start()
-    {
-        if (targetLight != null)
-        {
+    void Start() {
+        if (targetLight != null) {
             baseIntensity = targetLight.intensity;
             targetIntensity = baseIntensity;
-        }
-        else
-        {
+        } else {
             targetIntensity = baseIntensity;
         }
 
         targetColor = neutralColor;
 
         // Subscribe to AffectiveManager if it exists
-        if (AffectiveManager.Instance != null)
-        {
+        if (AffectiveManager.Instance != null) {
             // Debug.Log("AffectiveLightController: Successfully subscribed to AffectiveManager.");
             AffectiveManager.Instance.OnEmotionDataReceived.AddListener(UpdateLightingParameters);
-        }
-        else
-        {
+        } else {
             Debug.LogError("AffectiveLightController: AffectiveManager.Instance is NULL during Start! Cannot subscribe.");
         }
     }
 
-    private void UpdateLightingParameters(TcpSocketClient.EmotionData data)
-    {
+    private void UpdateLightingParameters(TcpSocketClient.EmotionData data) {
         // Map Arousal (-1 to 1) to Intensity multiplier
         float arousalNormalized = Mathf.Clamp01((data.smoothed_arousal + 1f) / 2f);
         float intensityMult = Mathf.Lerp(minIntensityMult, maxIntensityMult, arousalNormalized);
         targetIntensity = baseIntensity * intensityMult;
 
         // Map Valence (-1 to 1) to Color
-        if (data.smoothed_valence > 0)
-        {
+        if (data.smoothed_valence > 0) {
             targetColor = Color.Lerp(neutralColor, highValenceColor, data.smoothed_valence);
-        }
-        else
-        {
+        } else {
             targetColor = Color.Lerp(neutralColor, lowValenceColor, -data.smoothed_valence);
         }
 
         // Debug.Log($"AffectiveLightController: Received Data -> Arousal: {data.smoothed_arousal}, Valence: {data.smoothed_valence} | Target Intensity: {targetIntensity}");
     }
 
-    void Update()
-    {
+    void Update() {
         // Only update the UI Overlay now, Lights and Ambient are disabled by request
-        if (fullScreenOverlay != null)
-        {
-            if (!AffectiveManager.IsAffectiveSceneActive)
-            {
+        if (fullScreenOverlay != null) {
+            if (!AffectiveManager.IsAffectiveSceneActive) {
                 // Keep it completely transparent and colorless in these scenes
                 fullScreenOverlay.color = new Color(1f, 1f, 1f, 0f);
                 return;
@@ -110,10 +91,8 @@ public class AffectiveLightTintController : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        if (AffectiveManager.Instance != null)
-        {
+    private void OnDestroy() {
+        if (AffectiveManager.Instance != null) {
             AffectiveManager.Instance.OnEmotionDataReceived.RemoveListener(UpdateLightingParameters);
         }
     }
