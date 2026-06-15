@@ -24,6 +24,7 @@ public class AffectiveExperienceController : MonoBehaviour {
     private string sessionStartTimeStr;
     private float lastPacketTime;
     private float timeSinceLastPacket;
+    private GameObject currentHelpArrow;
 
     void Start() {
         lastScreenshotTime = Time.time + firstScreenshotTime; // Delay first screenshot to give player time to settle in
@@ -113,7 +114,7 @@ public class AffectiveExperienceController : MonoBehaviour {
             timeInNegativeValence = 0f;
         }
 
-        ProvideHelp();
+        // ProvideHelp();
         // Trigger Help
         if (timeStuck >= lostTimeThreshold && timeInNegativeValence >= lostTimeThreshold) {
             ProvideHelp();
@@ -132,6 +133,7 @@ public class AffectiveExperienceController : MonoBehaviour {
 
     private void ShowClosestStoneHelp() {
         if (playerTransform == null) return;
+        if (currentHelpArrow != null) return;
 
         Stone[] stones = FindObjectsByType<Stone>(FindObjectsSortMode.None);
         if (stones.Length == 0) return;
@@ -148,12 +150,13 @@ public class AffectiveExperienceController : MonoBehaviour {
             }
         }
         if (closestStone != null) {
-            StartCoroutine(SpawnHelpColumn(closestStone.transform.position));
+            StartCoroutine(SpawnHelpColumn(closestStone.transform.position, closestStone));
         }
     }
 
-    private IEnumerator SpawnHelpColumn(Vector3 position) {
+    private IEnumerator SpawnHelpColumn(Vector3 position, Stone targetStone) {
         GameObject arrowParent = new GameObject("HelpArrow");
+        currentHelpArrow = arrowParent;
         // Start higher up so the tail doesn't clip into the floor
         arrowParent.transform.position = position + Vector3.up * 15f;
 
@@ -196,9 +199,17 @@ public class AffectiveExperienceController : MonoBehaviour {
         tail.GetComponent<Renderer>().material = mat;
         head.GetComponent<Renderer>().material = mat;
 
-        // 4. Keep visible for 8 seconds
-        yield return new WaitForSeconds(8f);
+        // 4. Keep visible until stone is collected
+        while (true) {
+            if (targetStone == null || !targetStone.gameObject.activeInHierarchy) {
+                break;
+            }
+            yield return null;
+        }
 
+        if (currentHelpArrow == arrowParent) {
+            currentHelpArrow = null;
+        }
         Destroy(arrowParent);
     }
 
