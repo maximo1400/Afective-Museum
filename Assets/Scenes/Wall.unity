@@ -43,7 +43,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 13
-  m_BakeOnSceneLoad: 1
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -95,7 +95,7 @@ LightmapSettings:
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000000, guid: c85c0fb6deef98ccabcd81f8a6b99965,
     type: 2}
-  m_LightingSettings: {fileID: 4890085278179872738, guid: 9c545c7a5f94f1f45af6ddd2839c8fc3,
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 175e754b97c91bff680034f697f0de0b,
     type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -623,6 +623,7 @@ Terrain:
   m_AllowAutoConnect: 0
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
+  m_EnableHeightmapLODFrustumCulling: 1
   m_TreeMotionVectorModeOverride: 3
 --- !u!4 &699781362
 Transform:
