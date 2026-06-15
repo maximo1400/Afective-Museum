@@ -56,3 +56,6 @@ UserSettings/
 .vscode/
 *.slnx
 Assets/TextMesh Pro/Noto_Emoji/Noto_Emoji/NotoEmoji-VariableFont_wght SDF.asset
+UpgradeLog*.htm
+AffectiveReports/*
+_Recovery/

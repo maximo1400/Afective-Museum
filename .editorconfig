@@ -1,0 +1,15 @@
+root = true
+
+dotnet_diagnostic.IDE0055.severity = warning
+
+[*.cs]
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_members_in_object_initializers = false
+csharp_new_line_before_members_in_anonymous_types = false
+csharp_new_line_before_accessors = false
+csharp_new_line_before_lambda_expression_body = false
+csharp_new_line_before_anonymous_method_expression_body = false
+csharp_new_line_before_finally = false
+
