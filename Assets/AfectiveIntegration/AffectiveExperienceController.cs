@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.IO;
 using System.Collections;
 using UnityEngine.SceneManagement;
@@ -199,11 +200,54 @@ public class AffectiveExperienceController : MonoBehaviour {
         tail.GetComponent<Renderer>().material = mat;
         head.GetComponent<Renderer>().material = mat;
 
+        // --- Create 2D UI Compass ---
+        GameObject canvasGO = new GameObject("CompassCanvas");
+        canvasGO.transform.SetParent(arrowParent.transform);
+        Canvas canvas = canvasGO.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvasGO.AddComponent<CanvasScaler>();
+        canvasGO.AddComponent<GraphicRaycaster>();
+        canvas.sortingOrder = 100;
+
+        GameObject textGO = new GameObject("CompassText");
+        textGO.transform.SetParent(canvasGO.transform, false);
+        Text uiCompassText = textGO.AddComponent<Text>();
+        uiCompassText.text = "↑";
+        uiCompassText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        uiCompassText.fontSize = 120;
+        uiCompassText.color = new Color(1f, 0.8f, 0f, 0.9f);
+        uiCompassText.alignment = TextAnchor.MiddleCenter;
+        uiCompassText.horizontalOverflow = HorizontalWrapMode.Overflow;
+        uiCompassText.verticalOverflow = VerticalWrapMode.Overflow;
+
+        RectTransform rt = uiCompassText.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(200, 200);
+        rt.anchorMin = new Vector2(0.5f, 1f);
+        rt.anchorMax = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = new Vector2(0, -150); // 150 pixels from top
+        // ----------------------
+
         // 4. Keep visible until stone is collected
         while (true) {
             if (targetStone == null || !targetStone.gameObject.activeInHierarchy) {
                 break;
             }
+
+            if (playerTransform != null && uiCompassText != null) {
+                Vector3 directionToStone = targetStone.transform.position - playerTransform.position;
+                directionToStone.y = 0;
+
+                Vector3 playerForward = playerTransform.forward;
+                playerForward.y = 0;
+
+                if (directionToStone.sqrMagnitude > 0.001f && playerForward.sqrMagnitude > 0.001f) {
+                    float angle = Vector3.SignedAngle(playerForward.normalized, directionToStone.normalized, Vector3.up);
+                    // Rotate the UI Text around Z axis
+                    rt.localRotation = Quaternion.Euler(0, 0, -angle);
+                }
+            }
+
             yield return null;
         }
 
