@@ -908,6 +908,7 @@ Transform:
   - {fileID: 403146879}
   - {fileID: 753275654}
   - {fileID: 151349314}
+  - {fileID: 1117323431}
   m_Father: {fileID: 1696493424}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &403146878
@@ -1338,6 +1339,7 @@ Terrain:
   m_AllowAutoConnect: 1
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
+  m_EnableHeightmapLODFrustumCulling: 1
   m_TreeMotionVectorModeOverride: 3
 --- !u!1 &589555094
 GameObject:
@@ -1594,6 +1596,95 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.10767724, y: 0.0150114875, z: 0.17}
   m_Center: {x: 0.043838635, y: 0.0024943845, z: 0.0054072416}
+--- !u!1 &1117323430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1117323431}
+  - component: {fileID: 1117323433}
+  - component: {fileID: 1117323432}
+  - component: {fileID: 1117323434}
+  m_Layer: 0
+  m_Name: TempleZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1117323431
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117323430}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -21.700006, y: -2.5, z: 0.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 352726133}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1117323432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117323430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8763b0fac9069451082257d01b2797e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AffectiveTempleTrigger
+  templeName: noravank
+--- !u!65 &1117323433
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117323430}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 101.57709, y: 30.073833, z: 54.618835}
+  m_Center: {x: 32.78174, y: 14.536917, z: -6.7658997}
+--- !u!65 &1117323434
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117323430}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 33.211243, y: 42.70207, z: 67.65784}
+  m_Center: {x: -2.053894, y: 20.851034, z: -10.2838745}
 --- !u!1 &1120927364
 GameObject:
   m_ObjectHideFlags: 0
@@ -2506,6 +2597,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: S_Hovhannes_07_Model_11
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c143c2fb266020de68f8ff739dd25e4d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

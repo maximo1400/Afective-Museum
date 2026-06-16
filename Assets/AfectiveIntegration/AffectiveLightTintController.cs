@@ -23,6 +23,8 @@ public class AffectiveLightTintController : MonoBehaviour {
     private float targetIntensity;
     private Color targetColor;
 
+    public static string currentTempleName = "";
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void OnLoad() {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -75,8 +77,8 @@ public class AffectiveLightTintController : MonoBehaviour {
     void Update() {
         // Only update the UI Overlay now, Lights and Ambient are disabled by request
         if (fullScreenOverlay != null) {
-            if (!AffectiveManager.IsAffectiveSceneActive) {
-                // Keep it completely transparent and colorless in these scenes
+            if (!AffectiveManager.IsAffectiveSceneActive || currentTempleName == "") {
+                // Keep it completely transparent and colorless in these scenes or outside temples
                 fullScreenOverlay.color = new Color(1f, 1f, 1f, 0f);
                 return;
             }
