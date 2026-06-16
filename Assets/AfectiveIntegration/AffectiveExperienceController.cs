@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.IO;
 using System.Collections;
 using UnityEngine.SceneManagement;
@@ -115,7 +116,6 @@ public class AffectiveExperienceController : MonoBehaviour {
             timeInNegativeValence = 0f;
         }
 
-        // ProvideHelp();
         // Trigger Help
         if (timeStuck >= lostTimeThreshold && timeInNegativeValence >= lostTimeThreshold) {
             ProvideHelp();
@@ -211,14 +211,12 @@ public class AffectiveExperienceController : MonoBehaviour {
 
         GameObject textGO = new GameObject("CompassText");
         textGO.transform.SetParent(canvasGO.transform, false);
-        Text uiCompassText = textGO.AddComponent<Text>();
+        TextMeshProUGUI uiCompassText = textGO.AddComponent<TextMeshProUGUI>();
         uiCompassText.text = "↑";
-        uiCompassText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         uiCompassText.fontSize = 120;
         uiCompassText.color = new Color(1f, 0.8f, 0f, 0.9f);
-        uiCompassText.alignment = TextAnchor.MiddleCenter;
-        uiCompassText.horizontalOverflow = HorizontalWrapMode.Overflow;
-        uiCompassText.verticalOverflow = VerticalWrapMode.Overflow;
+        uiCompassText.alignment = TextAlignmentOptions.Center;
+        uiCompassText.overflowMode = TextOverflowModes.Overflow;
 
         RectTransform rt = uiCompassText.GetComponent<RectTransform>();
         rt.sizeDelta = new Vector2(200, 200);
