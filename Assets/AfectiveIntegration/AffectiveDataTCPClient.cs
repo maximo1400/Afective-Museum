@@ -78,14 +78,11 @@ public class TcpSocketClient : MonoBehaviour {
                 // Suppressing socket exception spam on connection failure
             } finally {
                 isConnected = false;
-                if (stream != null) {
-                    stream.Close();
-                    stream = null;
-                }
-                if (client != null) {
-                    client.Close();
-                    client = null;
-                }
+                stream?.Close();
+                stream = null;
+                
+                client?.Close();
+                client = null;
 
                 if (isRunning) {
                     Thread.Sleep(TimeSpan.FromSeconds(reconnectDelay));
@@ -98,13 +95,10 @@ public class TcpSocketClient : MonoBehaviour {
         isRunning = false;
         isConnected = false;
 
-        if (stream != null) {
-            stream.Close();
-        }
-        if (client != null) {
-            client.Close();
-        }
-        if (clientThread != null && clientThread.IsAlive) {
+        stream?.Close();
+        client?.Close();
+        
+        if (clientThread?.IsAlive == true) {
             clientThread.Abort();
         }
     }
