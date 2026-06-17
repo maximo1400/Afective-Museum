@@ -1642,7 +1642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8763b0fac9069451082257d01b2797e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AffectiveTempleTrigger
-  templeName: noravank
+  templeName: Hovhannes
 --- !u!65 &1117323433
 BoxCollider:
   m_ObjectHideFlags: 0
