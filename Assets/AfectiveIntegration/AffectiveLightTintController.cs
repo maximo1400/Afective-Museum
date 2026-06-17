@@ -7,23 +7,31 @@ public class AffectiveLightTintController : MonoBehaviour {
     [Header("UI Overlay Settings (For Menus)")]
     public Image fullScreenOverlay;
     [Range(0f, 1f)]
-    public float maxOverlayOpacity = 0.8f; // Massively increased from 0.3f to make it extreme
+    public float maxOverlayOpacity = 0.9f;
 
-    [Header("Light Settings (DISABLED)")]
-    public Light targetLight;
     public float baseIntensity = 1f;
-    public float maxIntensityMult = 10.0f; // Boosted to make it obvious
-    public float minIntensityMult = 0.2f;
+    public float maxIntensityMult = 10.0f;
+    public float minIntensityMult = 0f;
 
     [Header("Color Settings")]
-    public Color highValenceColor = Color.green; // Extremely obvious
-    public Color lowValenceColor = Color.red;    // Extremely obvious
+    public Color highValenceColor = Color.green;
+    public Color lowValenceColor = Color.red;
     public Color neutralColor = Color.white;
-
+    public static string currentTempleName = "";
     private float targetIntensity;
     private Color targetColor;
 
-    public static string currentTempleName = "";
+    [Header("Aruch color settings")]
+    [SerializeField] private Color aruchHighValenceColor = new(0.5f, 1f, 0.5f);
+    [SerializeField] private Color aruchLowValenceColor = new(1f, 0.5f, 0.5f);
+    [SerializeField] private Color aruchNeutralColor = new(1f, 1f, 1f);
+
+    [Header("Hovhannes color settings")]
+    [SerializeField] private Color hovhannesHighValenceColor = new(0.5f, 1f, 0.5f);
+    [SerializeField] private Color hovhannesLowValenceColor = new(1f, 0.5f, 0.5f);
+    [SerializeField] private Color hovhannesNeutralColor = new(1f, 1f, 1f);
+
+
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void OnLoad() {
@@ -33,20 +41,14 @@ public class AffectiveLightTintController : MonoBehaviour {
     static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode) {
         if (AffectiveManager.IsAffectiveScene(scene.name)) {
             if (FindAnyObjectByType<AffectiveLightTintController>() == null) {
-                GameObject go = new GameObject("AffectiveLightTintController");
+                GameObject go = new("AffectiveLightTintController");
                 go.AddComponent<AffectiveLightTintController>();
             }
         }
     }
 
     void Start() {
-        if (targetLight != null) {
-            baseIntensity = targetLight.intensity;
-            targetIntensity = baseIntensity;
-        } else {
-            targetIntensity = baseIntensity;
-        }
-
+        targetIntensity = baseIntensity;
         targetColor = neutralColor;
 
         // Subscribe to AffectiveManager if it exists

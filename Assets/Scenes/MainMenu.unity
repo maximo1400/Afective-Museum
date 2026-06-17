@@ -683,8 +683,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  highArousalThreshold: 3
-  negativeValenceThreshold: 1
+  highArousalThreshold: 0.5
+  negativeValenceThreshold: -0.5
 --- !u!4 &300219395
 Transform:
   m_ObjectHideFlags: 0
@@ -716,8 +716,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 714a9e48cee0df84bbceded261c8b98f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MockAffectiveData
-  simulatedValence: 2
-  simulatedArousal: 2
+  simulatedValence: 0
+  simulatedArousal: 0
   simulatedConfidence: 0.5
   isEnabled: 1
 --- !u!114 &300219397
@@ -2900,13 +2900,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ValenceLightingController
   fullScreenOverlay: {fileID: 1635613869}
   maxOverlayOpacity: 0.3
-  targetLight: {fileID: 2011416771}
   baseIntensity: 1
   maxIntensityMult: 1.5
   minIntensityMult: 0.2
   highValenceColor: {r: 1, g: 0.9, b: 0.8, a: 1}
   lowValenceColor: {r: 0.6, g: 0.8, b: 1, a: 1}
   neutralColor: {r: 1, g: 1, b: 1, a: 1}
+  aruchHighValenceColor: {r: 0.5, g: 1, b: 0.5, a: 1}
+  aruchLowValenceColor: {r: 1, g: 0.5, b: 0.5, a: 1}
+  aruchNeutralColor: {r: 1, g: 1, b: 1, a: 1}
+  hovhannesHighValenceColor: {r: 0.5, g: 1, b: 0.5, a: 1}
+  hovhannesLowValenceColor: {r: 1, g: 0.5, b: 0.5, a: 1}
+  hovhannesNeutralColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!108 &2011416771
 Light:
   m_ObjectHideFlags: 0

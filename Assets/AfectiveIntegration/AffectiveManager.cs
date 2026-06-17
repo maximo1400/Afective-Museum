@@ -19,8 +19,8 @@ public class AffectiveManager : MonoBehaviour {
     public UnityEvent OnNegativeValence;
 
     [Header("Settings")]
-    public float highArousalThreshold = 3f;
-    public float negativeValenceThreshold = 1f;
+    [SerializeField] private float highArousalThreshold = 0.5f;
+    [SerializeField] private float negativeValenceThreshold = -0.5f;
 
     private TcpSocketClient tcpClient;
     private float lastTimestamp = -1f;

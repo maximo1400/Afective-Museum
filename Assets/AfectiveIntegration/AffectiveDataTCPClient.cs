@@ -10,6 +10,11 @@ public class TcpSocketClient : MonoBehaviour {
     public int port = 65432;
     public float reconnectDelay = 2f;
 
+    [Header("Data Mapping Settings")]
+    private float originalRangeMin = 1f;
+    private float originalRangeMax = 5f;
+    private float vaRangecenter;
+    private float vaRangeHalf;
     [System.Serializable]
     public class EmotionData {
         public float raw_valence;
@@ -21,7 +26,7 @@ public class TcpSocketClient : MonoBehaviour {
     }
 
     public EmotionData latestData;
-    private readonly object dataLock = new object();
+    private readonly object dataLock = new();
 
     public EmotionData LatestData {
         get {
@@ -44,6 +49,9 @@ public class TcpSocketClient : MonoBehaviour {
             IsBackground = true
         };
         clientThread.Start();
+        // Remap incoming values to -1 to 1 using defined range
+        vaRangecenter = (originalRangeMin + originalRangeMax) / 2f;
+        vaRangeHalf = (originalRangeMax - originalRangeMin) / 2f;
     }
 
     private void ClientLoop() {
@@ -69,6 +77,12 @@ public class TcpSocketClient : MonoBehaviour {
                     string serverMessage = Encoding.UTF8.GetString(incomingData);
 
                     EmotionData data = JsonUtility.FromJson<EmotionData>(serverMessage);
+
+                    data.raw_valence = (data.raw_valence - vaRangecenter) / vaRangeHalf;
+                    data.raw_arousal = (data.raw_arousal - vaRangecenter) / vaRangeHalf;
+                    data.smoothed_valence = (data.smoothed_valence - vaRangecenter) / vaRangeHalf;
+                    data.smoothed_arousal = (data.smoothed_arousal - vaRangecenter) / vaRangeHalf;
+
                     lock (dataLock) {
                         latestData = data;
                     }
@@ -80,7 +94,7 @@ public class TcpSocketClient : MonoBehaviour {
                 isConnected = false;
                 stream?.Close();
                 stream = null;
-                
+
                 client?.Close();
                 client = null;
 
@@ -97,7 +111,7 @@ public class TcpSocketClient : MonoBehaviour {
 
         stream?.Close();
         client?.Close();
-        
+
         if (clientThread?.IsAlive == true) {
             clientThread.Abort();
         }

@@ -7,15 +7,15 @@ using UnityEngine.SceneManagement;
 
 public class AffectiveExperienceController : MonoBehaviour {
     [Header("Screenshot Settings")]
-    private float highIntensityThreshold = 3f;
-    private float screenshotCooldown = 10f;
-    private float firstScreenshotTime = 10f;
+    private readonly float highIntensityThreshold = 0.5f;
+    private readonly float screenshotCooldown = 10f;
+    private readonly float firstScreenshotTime = 10f;
     private float lastScreenshotTime;
 
     [Header("Lost Player Settings")]
     public bool enableHelpSystem = true;
-    private float lostValenceThreshold = 1f;
-    private float lostTimeThreshold = 30f;
+    private readonly float lostValenceThreshold = -0.5f;
+    private readonly float lostTimeThreshold = 30f;
     private float timeInNegativeValence = 0f;
 
     // Position tracking to check if player is actually lost/stuck
