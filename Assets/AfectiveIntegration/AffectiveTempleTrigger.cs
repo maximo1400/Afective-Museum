@@ -9,7 +9,7 @@ public class AffectiveTempleTrigger : MonoBehaviour {
         if (other.CompareTag("Player")) {
             collidersInside++;
             if (collidersInside == 1) {
-                AffectiveLightTintController.currentTempleName = templeName;
+                AffectiveManager.currentTempleName = templeName;
                 Debug.Log($"[Affective] Entered temple: {templeName}");
             }
         }
@@ -20,7 +20,7 @@ public class AffectiveTempleTrigger : MonoBehaviour {
             collidersInside--;
             if (collidersInside <= 0) {
                 collidersInside = 0;
-                AffectiveLightTintController.currentTempleName = "";
+                AffectiveManager.currentTempleName = "";
                 Debug.Log($"[Affective] Exited temple: {templeName}");
             }
         }

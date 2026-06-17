@@ -80,14 +80,16 @@ public class AffectiveExperienceController : MonoBehaviour {
 
         string timestampStr = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
         string screenshotPath = Path.Combine(folderPath, $"Intensity_Screenshot_{timestampStr}.png");
-        string reportPath = Path.Combine(folderPath, $"Intensity_Report_{timestampStr}.txt");
+        string reportPath = Path.Combine(folderPath, $"Intensity_Report_{timestampStr}.yml");
 
         ScreenCapture.CaptureScreenshot(screenshotPath);
 
-        string reportContent = $"High Intensity Event Logged at {System.DateTime.Now}\n" +
-                               $"Valence: {data.smoothed_valence}\n" +
-                               $"Arousal: {data.smoothed_arousal}\n" +
-                               $"Confidence: {data.confidence}";
+        string reportContent = $"timestamp: \"{System.DateTime.Now:yyyy-MM-dd HH:mm:ss}\"\n" +
+                               $"event: \"High Intensity\"\n" +
+                               $"metrics:\n" +
+                               $"  valence: {data.smoothed_valence}\n" +
+                               $"  arousal: {data.smoothed_arousal}\n" +
+                               $"  confidence: {data.confidence}";
 
         File.WriteAllText(reportPath, reportContent);
         Debug.Log($"High Intensity Event! Screenshot saved to: {screenshotPath}");
@@ -127,6 +129,8 @@ public class AffectiveExperienceController : MonoBehaviour {
 
     private void ProvideHelp() {
         if (!AffectiveManager.IsAffectiveSceneActive || !enableHelpSystem) return;
+
+        if (!string.IsNullOrEmpty(AffectiveManager.currentTempleName)) return;
 
         Debug.Log("Player seems lost and frustrated! Providing help...");
         ShowClosestStoneHelp();

@@ -61,8 +61,8 @@ public class AffectiveAudioController : MonoBehaviour {
 
     void Update() {
         // Smoothly interpolate volumes
-        float currentTargetRelaxing = (!AffectiveManager.IsAffectiveSceneActive || AffectiveLightTintController.currentTempleName == "") ? targetRelaxingVolume : 0f;
-        float currentTargetScary = (!AffectiveManager.IsAffectiveSceneActive || AffectiveLightTintController.currentTempleName == "") ? 0f : targetScaryVolume;
+        float currentTargetRelaxing = (!AffectiveManager.IsAffectiveSceneActive || AffectiveManager.currentTempleName == "") ? targetRelaxingVolume : 0f;
+        float currentTargetScary = (!AffectiveManager.IsAffectiveSceneActive || AffectiveManager.currentTempleName == "") ? 0f : targetScaryVolume;
 
         relaxingAudioSource.volume = Mathf.Lerp(relaxingAudioSource.volume, currentTargetRelaxing, Time.deltaTime * crossfadeSpeed);
         scaryAudioSource.volume = Mathf.Lerp(scaryAudioSource.volume, currentTargetScary, Time.deltaTime * crossfadeSpeed);

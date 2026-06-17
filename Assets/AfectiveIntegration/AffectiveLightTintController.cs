@@ -15,7 +15,6 @@ public class AffectiveLightTintController : MonoBehaviour {
 
     [Header("Color Settings")]
     private readonly Color transparentColor = new(0f, 0f, 0f, 0f);
-    public static string currentTempleName = "";
     private static string cachedTempleName = "";
     private float targetIntensity;
     private Color targetColor;
@@ -26,13 +25,12 @@ public class AffectiveLightTintController : MonoBehaviour {
     [Header("Aruch color settings")]
     [SerializeField] private Color aruchHighValColor = new(0.5f, 1f, 0.5f);
     [SerializeField] private Color aruchLowValColor = new(1f, 0.5f, 0.5f);
-    [SerializeField] private Color aruchNeutralColor = new(0f, 0f, 0f); // Changed from white to black
+    [SerializeField] private Color aruchNeutralColor = new(0f, 0f, 0f);
 
     [Header("Hovhannes color settings")]
     [SerializeField] private Color hovhannesHighValColor = new(0.5f, 1f, 0.5f);
     [SerializeField] private Color hovhannesLowValColor = new(1f, 0.5f, 0.5f);
-    [SerializeField] private Color hovhannesNeutralColor = new(0f, 0f, 0f); // Changed from white to black
-
+    [SerializeField] private Color hovhannesNeutralColor = new(0f, 0f, 0f);
 
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -64,33 +62,26 @@ public class AffectiveLightTintController : MonoBehaviour {
     }
 
     private void UpdateColorCache() {
-        cachedTempleName = currentTempleName;
+        cachedTempleName = AffectiveManager.currentTempleName;
+        activeHighValColor = transparentColor;
+        activeLowValColor = transparentColor;
+        activeNeutralColor = transparentColor;
+        if (!AffectiveManager.IsAffectiveSceneActive) return;
 
-        if (!AffectiveManager.IsAffectiveSceneActive) {
-            activeHighValColor = transparentColor;
-            activeLowValColor = transparentColor;
-            activeNeutralColor = transparentColor;
-
-        } else if (currentTempleName == "Aruch") {
+        if (cachedTempleName == "Aruch") {
             activeHighValColor = aruchHighValColor;
             activeLowValColor = aruchLowValColor;
             activeNeutralColor = aruchNeutralColor;
 
-        } else if (currentTempleName == "Hovhannes") {
+        } else if (cachedTempleName == "Hovhannes") {
             activeHighValColor = hovhannesHighValColor;
             activeLowValColor = hovhannesLowValColor;
             activeNeutralColor = hovhannesNeutralColor;
-
-        } else {
-            // disable tint in non-temple scenes
-            activeHighValColor = transparentColor;
-            activeLowValColor = transparentColor;
-            activeNeutralColor = transparentColor;
         }
     }
 
     private void UpdateLightingParameters(TcpSocketClient.EmotionData data) {
-        if (!AffectiveManager.IsAffectiveSceneActive || currentTempleName == "") {
+        if (!AffectiveManager.IsAffectiveSceneActive || AffectiveManager.currentTempleName == "") {
             targetColor = transparentColor;
             targetIntensity = 0f;
             return;
@@ -103,7 +94,7 @@ public class AffectiveLightTintController : MonoBehaviour {
         float intensityMult = Mathf.Lerp(minIntensityMult, maxIntensityMult, arousalNormalized);
         targetIntensity = intensityMult * Mathf.Abs(data.smoothed_valence);
 
-        if (cachedTempleName != currentTempleName) {
+        if (cachedTempleName != AffectiveManager.currentTempleName) {
             UpdateColorCache();
         }
 

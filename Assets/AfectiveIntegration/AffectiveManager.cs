@@ -27,6 +27,7 @@ public class AffectiveManager : MonoBehaviour {
 
     public static AffectiveManager Instance { get; private set; }
     public static bool IsAffectiveSceneActive { get; private set; }
+    public static string currentTempleName = "";
 
     private void Awake() {
         if (Instance == null) {
