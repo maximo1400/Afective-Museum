@@ -2898,19 +2898,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49107bb393b1e46acae48a4a5272673a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValenceLightingController
-  fullScreenOverlay: {fileID: 1635613869}
-  maxOverlayOpacity: 0.3
-  baseIntensity: 1
-  maxIntensityMult: 1.5
-  minIntensityMult: 0.2
-  highValenceColor: {r: 1, g: 0.9, b: 0.8, a: 1}
-  lowValenceColor: {r: 0.6, g: 0.8, b: 1, a: 1}
-  neutralColor: {r: 1, g: 1, b: 1, a: 1}
-  aruchHighValenceColor: {r: 0.5, g: 1, b: 0.5, a: 1}
-  aruchLowValenceColor: {r: 1, g: 0.5, b: 0.5, a: 1}
+  TintOverlay: {fileID: 1635613869}
+  aruchHighValColor: {r: 0.5, g: 1, b: 0.5, a: 1}
+  aruchLowValColor: {r: 1, g: 0.5, b: 0.5, a: 1}
   aruchNeutralColor: {r: 1, g: 1, b: 1, a: 1}
-  hovhannesHighValenceColor: {r: 0.5, g: 1, b: 0.5, a: 1}
-  hovhannesLowValenceColor: {r: 1, g: 0.5, b: 0.5, a: 1}
+  hovhannesHighValColor: {r: 0.5, g: 1, b: 0.5, a: 1}
+  hovhannesLowValColor: {r: 1, g: 0.5, b: 0.5, a: 1}
   hovhannesNeutralColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!108 &2011416771
 Light:

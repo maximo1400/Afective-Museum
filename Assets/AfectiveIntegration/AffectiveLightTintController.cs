@@ -5,31 +5,33 @@ using UnityEngine.UI;
 
 public class AffectiveLightTintController : MonoBehaviour {
     [Header("UI Overlay Settings (For Menus)")]
-    public Image fullScreenOverlay;
+    public Image TintOverlay;
     [Range(0f, 1f)]
-    public float maxOverlayOpacity = 0.9f;
+    private readonly float maxOverlayOpacity = 0.85f;
 
-    public float baseIntensity = 1f;
-    public float maxIntensityMult = 10.0f;
-    public float minIntensityMult = 0f;
+    private readonly float baseIntensity = 1f;
+    private readonly float maxIntensityMult = 1f;
+    private readonly float minIntensityMult = 0f;
 
     [Header("Color Settings")]
-    public Color highValenceColor = Color.green;
-    public Color lowValenceColor = Color.red;
-    public Color neutralColor = Color.white;
+    private readonly Color transparentColor = new(0f, 0f, 0f, 0f);
     public static string currentTempleName = "";
+    private static string cachedTempleName = "";
     private float targetIntensity;
     private Color targetColor;
+    private Color activeHighValColor;
+    private Color activeLowValColor;
+    private Color activeNeutralColor;
 
     [Header("Aruch color settings")]
-    [SerializeField] private Color aruchHighValenceColor = new(0.5f, 1f, 0.5f);
-    [SerializeField] private Color aruchLowValenceColor = new(1f, 0.5f, 0.5f);
-    [SerializeField] private Color aruchNeutralColor = new(1f, 1f, 1f);
+    [SerializeField] private Color aruchHighValColor = new(0.5f, 1f, 0.5f);
+    [SerializeField] private Color aruchLowValColor = new(1f, 0.5f, 0.5f);
+    [SerializeField] private Color aruchNeutralColor = new(0f, 0f, 0f); // Changed from white to black
 
     [Header("Hovhannes color settings")]
-    [SerializeField] private Color hovhannesHighValenceColor = new(0.5f, 1f, 0.5f);
-    [SerializeField] private Color hovhannesLowValenceColor = new(1f, 0.5f, 0.5f);
-    [SerializeField] private Color hovhannesNeutralColor = new(1f, 1f, 1f);
+    [SerializeField] private Color hovhannesHighValColor = new(0.5f, 1f, 0.5f);
+    [SerializeField] private Color hovhannesLowValColor = new(1f, 0.5f, 0.5f);
+    [SerializeField] private Color hovhannesNeutralColor = new(0f, 0f, 0f); // Changed from white to black
 
 
 
@@ -49,7 +51,8 @@ public class AffectiveLightTintController : MonoBehaviour {
 
     void Start() {
         targetIntensity = baseIntensity;
-        targetColor = neutralColor;
+        targetColor = transparentColor;
+        UpdateColorCache();
 
         // Subscribe to AffectiveManager if it exists
         if (AffectiveManager.Instance != null) {
@@ -60,39 +63,69 @@ public class AffectiveLightTintController : MonoBehaviour {
         }
     }
 
+    private void UpdateColorCache() {
+        cachedTempleName = currentTempleName;
+
+        if (!AffectiveManager.IsAffectiveSceneActive) {
+            activeHighValColor = transparentColor;
+            activeLowValColor = transparentColor;
+            activeNeutralColor = transparentColor;
+
+        } else if (currentTempleName == "Aruch") {
+            activeHighValColor = aruchHighValColor;
+            activeLowValColor = aruchLowValColor;
+            activeNeutralColor = aruchNeutralColor;
+
+        } else if (currentTempleName == "Hovhannes") {
+            activeHighValColor = hovhannesHighValColor;
+            activeLowValColor = hovhannesLowValColor;
+            activeNeutralColor = hovhannesNeutralColor;
+
+        } else {
+            // disable tint in non-temple scenes
+            activeHighValColor = transparentColor;
+            activeLowValColor = transparentColor;
+            activeNeutralColor = transparentColor;
+        }
+    }
+
     private void UpdateLightingParameters(TcpSocketClient.EmotionData data) {
-        // Map Arousal (-1 to 1) to Intensity multiplier
-        float arousalNormalized = Mathf.Clamp01((data.smoothed_arousal + 1f) / 2f);
+        if (!AffectiveManager.IsAffectiveSceneActive || currentTempleName == "") {
+            targetColor = transparentColor;
+            targetIntensity = 0f;
+            return;
+        }
+        // Map Arousal (-1 to 1) to a 0 to 1 range for Lerp
+        float arousalNormalized = Mathf.InverseLerp(-1f, 1f, data.smoothed_arousal);
+
+        // Map Arousal to Intensity multiplier. 
+        // We multiply by the absolute value of valence to fade out the tint as valence approaches 0.
         float intensityMult = Mathf.Lerp(minIntensityMult, maxIntensityMult, arousalNormalized);
-        targetIntensity = baseIntensity * intensityMult;
+        targetIntensity = intensityMult * Mathf.Abs(data.smoothed_valence);
+
+        if (cachedTempleName != currentTempleName) {
+            UpdateColorCache();
+        }
 
         // Map Valence (-1 to 1) to Color
         if (data.smoothed_valence > 0) {
-            targetColor = Color.Lerp(neutralColor, highValenceColor, data.smoothed_valence);
+            targetColor = Color.Lerp(activeNeutralColor, activeHighValColor, data.smoothed_valence);
         } else {
-            targetColor = Color.Lerp(neutralColor, lowValenceColor, -data.smoothed_valence);
+            targetColor = Color.Lerp(activeNeutralColor, activeLowValColor, -data.smoothed_valence);
         }
 
         // Debug.Log($"AffectiveLightController: Received Data -> Arousal: {data.smoothed_arousal}, Valence: {data.smoothed_valence} | Target Intensity: {targetIntensity}");
     }
 
     void Update() {
-        // Only update the UI Overlay now, Lights and Ambient are disabled by request
-        if (fullScreenOverlay != null) {
-            if (!AffectiveManager.IsAffectiveSceneActive || currentTempleName == "") {
-                // Keep it completely transparent and colorless in these scenes or outside temples
-                fullScreenOverlay.color = new Color(1f, 1f, 1f, 0f);
-                return;
-            }
+        if (TintOverlay == null) return;
 
-            // Apply the color to the UI overlay but keep it slightly transparent
-            Color overlayColor = targetColor;
+        Color overlayColor = targetColor;
+        // Map arousal to opacity (higher arousal = stronger tint)
+        overlayColor.a = Mathf.Lerp(0f, maxOverlayOpacity, targetIntensity / maxIntensityMult);
+        TintOverlay.color = Color.Lerp(TintOverlay.color, overlayColor, Time.deltaTime * 2f);
 
-            // Map arousal to opacity (higher arousal = stronger tint)
-            overlayColor.a = Mathf.Lerp(0f, maxOverlayOpacity, targetIntensity / maxIntensityMult);
 
-            fullScreenOverlay.color = Color.Lerp(fullScreenOverlay.color, overlayColor, Time.deltaTime * 2f);
-        }
     }
 
     private void OnDestroy() {
