@@ -49,6 +49,7 @@ public class SceneScripts : MonoBehaviour
         
         if (StaticValues.back_from_details)
         {
+            Load(false);
             StaticValues.back_from_details = false;
         }
 
