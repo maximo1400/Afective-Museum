@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -63,6 +63,17 @@ public class SmoothCameraPositionChange : MonoBehaviour
                     Cursor.lockState = CursorLockMode.None;
                     string name = hit.transform.gameObject.name;
                     StaticValues.stone_name = name;
+                    
+                    StaticValues.loaded_scenes.Clear();
+                    for (int i = 0; i < SceneManager.sceneCount; i++)
+                    {
+                        string sName = SceneManager.GetSceneAt(i).name;
+                        if (sName != StaticValues.previos_scene && sName != "StoneDetails")
+                        {
+                            StaticValues.loaded_scenes.Add(sName);
+                        }
+                    }
+                    
                     SceneManager.LoadScene("StoneDetails", LoadSceneMode.Single);
                 }
             }

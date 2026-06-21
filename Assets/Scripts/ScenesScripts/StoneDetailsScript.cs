@@ -79,11 +79,10 @@ public class StoneDetailsScript : MonoBehaviour
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             SceneManager.LoadScene(StaticValues.previos_scene, LoadSceneMode.Single);
-            SceneManager.LoadScene("Noradus", LoadSceneMode.Additive);
-            SceneManager.LoadScene("Wall", LoadSceneMode.Additive);
-            SceneManager.LoadScene("EchmiyadzinAlly", LoadSceneMode.Additive);
-            SceneManager.LoadScene("Aruch", LoadSceneMode.Additive);
-            SceneManager.LoadScene("Small3", LoadSceneMode.Additive);
+            foreach (string sceneName in StaticValues.loaded_scenes)
+            {
+                SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+            }
         }
     }
 
