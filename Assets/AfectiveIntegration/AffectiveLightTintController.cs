@@ -28,8 +28,8 @@ public class AffectiveLightTintController : MonoBehaviour {
     [SerializeField] private Color aruchNeutralColor = new(0f, 0f, 0f);
 
     [Header("Hovhannes color settings")]
-    [SerializeField] private Color hovhannesHighValColor = new(0.5f, 1f, 0.5f);
-    [SerializeField] private Color hovhannesLowValColor = new(1f, 0.5f, 0.5f);
+    [SerializeField] private Color hovhannesWarmColor = new(1f, 0.5f, 0f);
+    [SerializeField] private Color hovhannesColdColor = new(0f, 0.5f, 1f);
     [SerializeField] private Color hovhannesNeutralColor = new(0f, 0f, 0f);
 
 
@@ -74,8 +74,8 @@ public class AffectiveLightTintController : MonoBehaviour {
             activeNeutralColor = aruchNeutralColor;
 
         } else if (cachedTempleName == "Hovhannes") {
-            activeHighValColor = hovhannesHighValColor;
-            activeLowValColor = hovhannesLowValColor;
+            activeHighValColor = hovhannesWarmColor;
+            activeLowValColor = hovhannesColdColor;
             activeNeutralColor = hovhannesNeutralColor;
         }
     }
@@ -86,25 +86,38 @@ public class AffectiveLightTintController : MonoBehaviour {
             targetIntensity = 0f;
             return;
         }
-        // Map Arousal (-1 to 1) to a 0 to 1 range for Lerp
-        float arousalNormalized = Mathf.InverseLerp(-1f, 1f, data.smoothed_arousal);
-
-        // Map Arousal to Intensity multiplier. 
-        // We multiply by the absolute value of valence to fade out the tint as valence approaches 0.
-        float intensityMult = Mathf.Lerp(minIntensityMult, maxIntensityMult, arousalNormalized);
-        targetIntensity = intensityMult * Mathf.Abs(data.smoothed_valence);
 
         if (cachedTempleName != AffectiveManager.currentTempleName) {
             UpdateColorCache();
         }
 
-        // Map Valence (-1 to 1) to Color
-        if (data.smoothed_valence > 0) {
-            targetColor = Color.Lerp(activeNeutralColor, activeHighValColor, data.smoothed_valence);
-        } else {
-            targetColor = Color.Lerp(activeNeutralColor, activeLowValColor, -data.smoothed_valence);
-        }
+        if (cachedTempleName == "Aruch") {
+            // Aruch: darker/moodier in an inverse way to emotions
+            // Negative emotions -> tint gets closer to inexistent (0 intensity)
+            // Positive emotions -> gets darker (higher intensity)
+            float valenceNormalized = Mathf.InverseLerp(-1f, 1f, data.smoothed_valence);
+            targetIntensity = Mathf.Lerp(0f, maxIntensityMult, valenceNormalized);
 
+            if (data.smoothed_valence > 0) {
+                targetColor = Color.Lerp(activeNeutralColor, activeHighValColor, data.smoothed_valence);
+            } else {
+                targetColor = Color.Lerp(activeNeutralColor, activeLowValColor, -data.smoothed_valence);
+            }
+
+        } else if (cachedTempleName == "Hovhannes") {
+            // Hovhannes: warmer the more relaxed someone is and colder otherwise
+            // Relaxed = low arousal. Warmer color for arousal < 0, colder color for arousal > 0
+            targetIntensity = Mathf.Lerp(0.3f, maxIntensityMult, Mathf.Abs(data.smoothed_arousal));
+
+            if (data.smoothed_arousal > 0) {
+                // Excited/Not relaxed: lerp to Cold
+                targetColor = Color.Lerp(activeNeutralColor, activeLowValColor, data.smoothed_arousal);
+            } else {
+                // Relaxed: lerp to Warm
+                targetColor = Color.Lerp(activeNeutralColor, activeHighValColor, -data.smoothed_arousal);
+            }
+
+        }
         // Debug.Log($"AffectiveLightController: Received Data -> Arousal: {data.smoothed_arousal}, Valence: {data.smoothed_valence} | Target Intensity: {targetIntensity}");
     }
 
