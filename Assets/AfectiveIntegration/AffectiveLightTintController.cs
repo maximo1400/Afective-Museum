@@ -11,7 +11,6 @@ public class AffectiveLightTintController : MonoBehaviour {
 
     private readonly float baseIntensity = 1f;
     private readonly float maxIntensityMult = 1f;
-    private readonly float minIntensityMult = 0f;
 
     [Header("Color Settings")]
     private readonly Color transparentColor = new(0f, 0f, 0f, 0f);
