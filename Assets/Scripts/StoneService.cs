@@ -188,13 +188,37 @@ public class StoneService : MonoBehaviour
                     }
                 }
             }
-            else
-            {
-                Debug.Log("Loaded offline " + bundleName.metadataBundleName);
-                metadataBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, bundleName.metadataBundleName));
 
-                Debug.Log("Loaded offline " + bundleName.stoneBundleName);
+            // Fallback to local StreamingAssets if metadataBundle failed or offline
+            if (metadataBundle == null)
+            {
+                Debug.Log("Loading offline " + bundleName.metadataBundleName);
+#if UNITY_WEBGL
+                string path = Application.streamingAssetsPath + "/" + bundleName.metadataBundleName;
+                using (UnityWebRequest uwr = UnityWebRequestAssetBundle.GetAssetBundle(path))
+                {
+                    yield return uwr.SendWebRequest();
+                    if (uwr.result == UnityWebRequest.Result.Success) metadataBundle = DownloadHandlerAssetBundle.GetContent(uwr);
+                }
+#else
+                metadataBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, bundleName.metadataBundleName));
+#endif
+            }
+
+            // Fallback to local StreamingAssets if stonesBundle failed or offline
+            if (stonesBundle == null)
+            {
+                Debug.Log("Loading offline " + bundleName.stoneBundleName);
+#if UNITY_WEBGL
+                string path = Application.streamingAssetsPath + "/" + bundleName.stoneBundleName;
+                using (UnityWebRequest uwr = UnityWebRequestAssetBundle.GetAssetBundle(path))
+                {
+                    yield return uwr.SendWebRequest();
+                    if (uwr.result == UnityWebRequest.Result.Success) stonesBundle = DownloadHandlerAssetBundle.GetContent(uwr);
+                }
+#else
                 stonesBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, bundleName.stoneBundleName));
+#endif
             }
 
             // Add Bundles to Stones Values
@@ -230,22 +254,36 @@ public class StoneService : MonoBehaviour
                     }
                 }
             }
-            else
+
+            // Fallback to local StreamingAssets if thumbsBundle failed or offline
+            if (thumbsBundle == null)
             {
-                Debug.Log("Loaded offline " + bundleName.thumbsBundleName);
+                Debug.Log("Loading offline " + bundleName.thumbsBundleName);
+#if UNITY_WEBGL
+                string path = Application.streamingAssetsPath + "/" + bundleName.thumbsBundleName;
+                using (UnityWebRequest uwr = UnityWebRequestAssetBundle.GetAssetBundle(path))
+                {
+                    yield return uwr.SendWebRequest();
+                    if (uwr.result == UnityWebRequest.Result.Success) thumbsBundle = DownloadHandlerAssetBundle.GetContent(uwr);
+                }
+#else
                 thumbsBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, bundleName.thumbsBundleName));
+#endif
             }
 
-            string[] assetNames = thumbsBundle.GetAllAssetNames();
-            foreach (string name in assetNames)
+            if (thumbsBundle != null)
             {
-                Texture2D texture = thumbsBundle.LoadAsset<Texture2D>(name);
-                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0), 100.0f);
-                sprite.name = texture.name;
-                StonesValues.stonesThumbs.Add(sprite);
+                string[] assetNames = thumbsBundle.GetAllAssetNames();
+                foreach (string name in assetNames)
+                {
+                    Texture2D texture = thumbsBundle.LoadAsset<Texture2D>(name);
+                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0), 100.0f);
+                    sprite.name = texture.name;
+                    StonesValues.stonesThumbs.Add(sprite);
+                }
+                StonesValues.stonesThumbs.Sort((Sprite p, Sprite q) => Int32.Parse(p.name) - Int32.Parse(q.name));
+                thumbsBundle.Unload(false);
             }
-            StonesValues.stonesThumbs.Sort((Sprite p, Sprite q) => Int32.Parse(p.name) - Int32.Parse(q.name));
-            thumbsBundle.Unload(false);
         }
 
         //SloadScreen.SetActive(false);

@@ -5,23 +5,26 @@ using UnityEngine.UI;
 
 public class AffectiveLightTintController : MonoBehaviour {
     [Header("UI Overlay Settings (For Menus)")]
-    public Image fullScreenOverlay;
+    public Image TintOverlay;
     [Range(0f, 1f)]
-    public float maxOverlayOpacity = 0.8f; // Massively increased from 0.3f to make it extreme
-
-    [Header("Light Settings (DISABLED)")]
-    public Light targetLight;
-    public float baseIntensity = 1f;
-    public float maxIntensityMult = 10.0f; // Boosted to make it obvious
-    public float minIntensityMult = 0.2f;
+    private float maxOverlayOpacity;
 
     [Header("Color Settings")]
-    public Color highValenceColor = Color.green; // Extremely obvious
-    public Color lowValenceColor = Color.red;    // Extremely obvious
-    public Color neutralColor = Color.white;
-
+    private static string cachedTempleName;
     private float targetIntensity;
     private Color targetColor;
+    private Color activeHighColor;
+    private Color activeLowColor;
+
+    [Header("Aruch color settings")]
+    private Color aruchHighValColor = Color.black;
+    private Color aruchLowValColor = Color.clear;
+    private readonly float aruchMaxOpacity = 0.6f;
+
+    [Header("Hovhannes color settings")]
+    private Color hovhannesWarmColor = Color.darkOrange;
+    private Color hovhannesColdColor = Color.dodgerBlue;
+    private readonly float hovhannesMaxOpacity = 0.15f;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void OnLoad() {
@@ -31,64 +34,78 @@ public class AffectiveLightTintController : MonoBehaviour {
     static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode) {
         if (AffectiveManager.IsAffectiveScene(scene.name)) {
             if (FindAnyObjectByType<AffectiveLightTintController>() == null) {
-                GameObject go = new GameObject("AffectiveLightTintController");
+                GameObject go = new("AffectiveLightTintController");
                 go.AddComponent<AffectiveLightTintController>();
             }
         }
     }
 
     void Start() {
-        if (targetLight != null) {
-            baseIntensity = targetLight.intensity;
-            targetIntensity = baseIntensity;
-        } else {
-            targetIntensity = baseIntensity;
-        }
-
-        targetColor = neutralColor;
+        targetColor = Color.clear;
+        UpdateColorCache();
 
         // Subscribe to AffectiveManager if it exists
         if (AffectiveManager.Instance != null) {
             // Debug.Log("AffectiveLightController: Successfully subscribed to AffectiveManager.");
             AffectiveManager.Instance.OnEmotionDataReceived.AddListener(UpdateLightingParameters);
-        } else {
-            Debug.LogError("AffectiveLightController: AffectiveManager.Instance is NULL during Start! Cannot subscribe.");
+        }
+    }
+
+    private void UpdateColorCache() {
+        cachedTempleName = AffectiveManager.currentTempleName;
+        activeHighColor = Color.clear;
+        activeLowColor = Color.clear;
+        if (!AffectiveManager.IsAffectiveSceneActive) return;
+
+        if (cachedTempleName == "Aruch") {
+            activeHighColor = aruchHighValColor;
+            activeLowColor = aruchLowValColor;
+            maxOverlayOpacity = aruchMaxOpacity;
+
+        } else if (cachedTempleName == "Hovhannes") {
+            activeHighColor = hovhannesWarmColor;
+            activeLowColor = hovhannesColdColor;
+            maxOverlayOpacity = hovhannesMaxOpacity;
         }
     }
 
     private void UpdateLightingParameters(TcpSocketClient.EmotionData data) {
-        // Map Arousal (-1 to 1) to Intensity multiplier
-        float arousalNormalized = Mathf.Clamp01((data.smoothed_arousal + 1f) / 2f);
-        float intensityMult = Mathf.Lerp(minIntensityMult, maxIntensityMult, arousalNormalized);
-        targetIntensity = baseIntensity * intensityMult;
-
-        // Map Valence (-1 to 1) to Color
-        if (data.smoothed_valence > 0) {
-            targetColor = Color.Lerp(neutralColor, highValenceColor, data.smoothed_valence);
-        } else {
-            targetColor = Color.Lerp(neutralColor, lowValenceColor, -data.smoothed_valence);
+        if (!AffectiveManager.IsAffectiveSceneActive || AffectiveManager.currentTempleName == "") {
+            targetColor = Color.clear;
+            targetIntensity = 0f;
+            return;
         }
 
+        if (cachedTempleName != AffectiveManager.currentTempleName) {
+            UpdateColorCache();
+        }
+
+        if (cachedTempleName == "Aruch") {
+            // Aruch: darker/moodier in an inverse way to emotions
+            // Positive emotions -> gets darker (night = can't see = danger)
+            // Negative emotions -> tint gets closer to inexistent 
+            targetColor = data.smoothed_valence > 0 ? activeHighColor : activeLowColor;
+
+            float valenceNormalized = Mathf.InverseLerp(-1f, 1f, data.smoothed_valence);
+            targetIntensity = Mathf.Lerp(0f, 1f, valenceNormalized);
+
+        } else if (cachedTempleName == "Hovhannes") {
+            // Hovhannes: warmer the more relaxed someone is and colder otherwise
+            // Aroused = high arousal, Colder color
+            // Relaxed = low arousal, Warmer color 
+            targetColor = data.smoothed_arousal > 0 ? activeHighColor : activeLowColor;
+
+            targetIntensity = Mathf.Lerp(0f, 1f, Mathf.Abs(data.smoothed_arousal));
+        }
         // Debug.Log($"AffectiveLightController: Received Data -> Arousal: {data.smoothed_arousal}, Valence: {data.smoothed_valence} | Target Intensity: {targetIntensity}");
     }
 
     void Update() {
-        // Only update the UI Overlay now, Lights and Ambient are disabled by request
-        if (fullScreenOverlay != null) {
-            if (!AffectiveManager.IsAffectiveSceneActive) {
-                // Keep it completely transparent and colorless in these scenes
-                fullScreenOverlay.color = new Color(1f, 1f, 1f, 0f);
-                return;
-            }
+        if (TintOverlay == null) return;
 
-            // Apply the color to the UI overlay but keep it slightly transparent
-            Color overlayColor = targetColor;
-
-            // Map arousal to opacity (higher arousal = stronger tint)
-            overlayColor.a = Mathf.Lerp(0f, maxOverlayOpacity, targetIntensity / maxIntensityMult);
-
-            fullScreenOverlay.color = Color.Lerp(fullScreenOverlay.color, overlayColor, Time.deltaTime * 2f);
-        }
+        Color overlayColor = targetColor;
+        overlayColor.a = Mathf.Lerp(0f, maxOverlayOpacity, targetIntensity);
+        TintOverlay.color = Color.Lerp(TintOverlay.color, overlayColor, Time.deltaTime * 2f);
     }
 
     private void OnDestroy() {

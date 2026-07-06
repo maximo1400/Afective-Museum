@@ -79,6 +79,10 @@ public class StoneDetailsScript : MonoBehaviour
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             SceneManager.LoadScene(StaticValues.previos_scene, LoadSceneMode.Single);
+            foreach (string sceneName in StaticValues.loaded_scenes)
+            {
+                SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+            }
         }
     }
 

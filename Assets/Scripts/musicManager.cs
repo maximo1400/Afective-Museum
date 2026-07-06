@@ -20,6 +20,7 @@ public class MusicManager : MonoBehaviour
             if (audioSource.clip != ambientMusic)
                 audioSource.clip = ambientMusic;
 
+            audioSource.volume = 0.06f;
             audioSource.loop = true;
             audioSource.Play();
         }
@@ -32,6 +33,7 @@ public class MusicManager : MonoBehaviour
             if (audioSource.clip != specialMusic)
                 audioSource.clip = specialMusic;
 
+            audioSource.volume = 0.1f;
             audioSource.loop = true;
             audioSource.Play();
         }
@@ -52,6 +54,7 @@ public class MusicManager : MonoBehaviour
             if (audioSource.clip != ambientMusic)
                 audioSource.clip = ambientMusic;
 
+            audioSource.volume = 0.06f;
             audioSource.loop = true;
             audioSource.Play();
         }

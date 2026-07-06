@@ -1,4 +1,4 @@
-﻿/*
+/*
     StaticValues.cs
     
     @author Gabriel Azócar Cárcamo <azocarcarcamo@gmail.com>
@@ -13,6 +13,7 @@ public class StaticValues : MonoBehaviour
     public static bool back_from_details = false;
     public static bool writing = false;
     public static bool online = false;
+    public static System.Collections.Generic.List<string> loaded_scenes = new System.Collections.Generic.List<string>();
 
     void Start()
     {

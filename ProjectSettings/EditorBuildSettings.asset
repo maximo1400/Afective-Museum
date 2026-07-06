@@ -23,10 +23,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/jose.unity
     guid: b83df44395c517b40b3678ed1bb8c0ac
-  - enabled: 1
+  - enabled: 0
     path: Assets/Legacy_Assets/Scenes/Museum.unity
     guid: 791c9fdc222836a438e812c56ab69c66
-  - enabled: 1
+  - enabled: 0
     path: Assets/Legacy_Assets/Scenes/Noravank.unity
     guid: 60868deade88e4e468dbb9155f9a46fb
   - enabled: 1
@@ -38,7 +38,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Aruch.unity
     guid: bfb4ff13bb769d34ca48ab55ad2d2ea5
-  - enabled: 1
+  - enabled: 0
     path: Assets/Legacy_Assets/Scenes/inside_church.unity
     guid: 27f1e891496e34140b85403e720eeece
   - enabled: 1

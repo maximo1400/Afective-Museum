@@ -4,16 +4,16 @@ using UnityEngine.SceneManagement;
 
 public class MockAffectiveData : MonoBehaviour {
     [Header("Simulated Emotion Data")]
-    [Range(0f, 4f)]
-    [SerializeField] private float simulatedValence = 2f;
-    [Range(0f, 4f)]
-    [SerializeField] private float simulatedArousal = 2f;
+    [Range(-1f, 1f)]
+    [SerializeField] private float simulatedValence = 0f;
+    [Range(-1f, 1f)]
+    [SerializeField] private float simulatedArousal = 0f;
     [Range(0f, 1f)]
     public float simulatedConfidence = 1f;
 
     [Header("Settings")]
     [SerializeField] private bool isEnabled = false;
-    private float updateInterval = 0.125f; // 8Hz
+    private readonly float updateInterval = 0.125f; // 8Hz
 
     private float timer = 0f;
     private TcpSocketClient TcpClient;
@@ -30,13 +30,13 @@ public class MockAffectiveData : MonoBehaviour {
         float step = 0.5f;
         if (Keyboard.current != null) {
             if (Keyboard.current.uKey.wasPressedThisFrame)
-                simulatedValence = Mathf.Clamp(simulatedValence + step, 0f, 4f);
+                simulatedValence = Mathf.Clamp(simulatedValence + step, -1f, 1f);
             if (Keyboard.current.jKey.wasPressedThisFrame)
-                simulatedValence = Mathf.Clamp(simulatedValence - step, 0f, 4f);
+                simulatedValence = Mathf.Clamp(simulatedValence - step, -1f, 1f);
             if (Keyboard.current.iKey.wasPressedThisFrame)
-                simulatedArousal = Mathf.Clamp(simulatedArousal + step, 0f, 4f);
+                simulatedArousal = Mathf.Clamp(simulatedArousal + step, -1f, 1f);
             if (Keyboard.current.kKey.wasPressedThisFrame)
-                simulatedArousal = Mathf.Clamp(simulatedArousal - step, 0f, 4f);
+                simulatedArousal = Mathf.Clamp(simulatedArousal - step, -1f, 1f);
         }
 
         timer += Time.deltaTime;
