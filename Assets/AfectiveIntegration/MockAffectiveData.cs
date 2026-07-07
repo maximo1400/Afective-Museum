@@ -16,10 +16,12 @@ public class MockAffectiveData : MonoBehaviour {
     private readonly float updateInterval = 0.125f; // 8Hz
 
     private float timer = 0f;
+    private double mockStartingTimestamp = 0;
     private TcpSocketClient TcpClient;
     private GUIStyle guiStyle;
 
     void Start() {
+        mockStartingTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
         TcpClient = FindFirstObjectByType<TcpSocketClient>();
     }
 
@@ -48,7 +50,8 @@ public class MockAffectiveData : MonoBehaviour {
                 valence = simulatedValence,
                 arousal = simulatedArousal,
                 confidence = simulatedConfidence,
-                timestamp = Time.time
+                timestamp = (float)(System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0),
+                starting_timestamp = (float)mockStartingTimestamp
             };
 
             if (TcpClient != null) {

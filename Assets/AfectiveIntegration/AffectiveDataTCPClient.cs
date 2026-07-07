@@ -21,6 +21,7 @@ public class TcpSocketClient : MonoBehaviour {
         public float arousal;
         public float confidence;
         public float timestamp;
+        public float starting_timestamp;
     }
 
     public EmotionData latestData;

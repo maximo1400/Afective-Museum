@@ -27,10 +27,12 @@ public class AffectiveExperienceController : MonoBehaviour {
     private float lastPacketTime;
     private float timeSinceLastPacket;
     private GameObject currentHelpArrow;
+    private double unityStartingTimestamp;
 
     void Start() {
+        unityStartingTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
         lastScreenshotTime = Time.time + firstScreenshotTime; // Delay first screenshot to give player time to settle in
-        sessionStartTimeStr = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        sessionStartTimeStr = System.DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
         lastPacketTime = Time.time;
 
         if (AffectiveManager.Instance != null) {
@@ -78,18 +80,22 @@ public class AffectiveExperienceController : MonoBehaviour {
             Directory.CreateDirectory(folderPath);
         }
 
-        string timestampStr = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        string timestampStr = System.DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
         string screenshotPath = Path.Combine(folderPath, $"Intensity_Screenshot_{timestampStr}.png");
         string reportPath = Path.Combine(folderPath, $"Intensity_Report_{timestampStr}.yml");
 
         ScreenCapture.CaptureScreenshot(screenshotPath);
 
-        string reportContent = $"timestamp: \"{System.DateTime.Now:yyyy-MM-dd HH:mm:ss}\"\n" +
+        string reportContent = $"timestamp: \"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}\"\n" +
                                $"event: \"High Intensity\"\n" +
                                $"metrics:\n" +
-                               $"  valence: {data.smoothed_valence}\n" +
-                               $"  arousal: {data.smoothed_arousal}\n" +
-                               $"  confidence: {data.confidence}";
+                               $"  valence: {data.valence}\n" +
+                               $"  arousal: {data.arousal}\n" +
+                               $"  confidence: {data.confidence}\n" +
+                               $"  data.timestamp: {data.timestamp}\n" +
+                               $"  unity.timestamp: {System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0}\n" +
+                               $"  data.starting_timestamp: {data.starting_timestamp}\n" +
+                               $"  unity.starting_timestamp: {unityStartingTimestamp}\n";
 
         File.WriteAllText(reportPath, reportContent);
         Debug.Log($"High Intensity Event! Screenshot saved to: {screenshotPath}");
