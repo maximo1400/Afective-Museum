@@ -45,10 +45,8 @@ public class MockAffectiveData : MonoBehaviour {
 
             // Create a fake EmotionData object
             var data = new TcpSocketClient.EmotionData {
-                raw_valence = simulatedValence,
-                raw_arousal = simulatedArousal,
-                smoothed_valence = simulatedValence,
-                smoothed_arousal = simulatedArousal,
+                valence = simulatedValence,
+                arousal = simulatedArousal,
                 confidence = simulatedConfidence,
                 timestamp = Time.time
             };

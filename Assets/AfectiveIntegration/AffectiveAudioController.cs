@@ -81,8 +81,8 @@ public class AffectiveAudioController : MonoBehaviour {
         }
 
         string templeName = AffectiveManager.currentTempleName;
-        float valenceNormalized = Mathf.InverseLerp(-1f, 1f, data.smoothed_valence);
-        float arousalNormalized = Mathf.InverseLerp(-1f, 1f, data.smoothed_arousal);
+        float valenceNormalized = Mathf.InverseLerp(-1f, 1f, data.valence);
+        float arousalNormalized = Mathf.InverseLerp(-1f, 1f, data.arousal);
 
         targetStormVolume = 0f;
         targetAysorVolume = 0f;

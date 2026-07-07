@@ -17,10 +17,8 @@ public class TcpSocketClient : MonoBehaviour {
     private float vaRangeHalf;
     [System.Serializable]
     public class EmotionData {
-        public float raw_valence;
-        public float raw_arousal;
-        public float smoothed_valence;
-        public float smoothed_arousal;
+        public float valence;
+        public float arousal;
         public float confidence;
         public float timestamp;
     }
@@ -78,10 +76,8 @@ public class TcpSocketClient : MonoBehaviour {
 
                     EmotionData data = JsonUtility.FromJson<EmotionData>(serverMessage);
 
-                    data.raw_valence = (data.raw_valence - vaRangecenter) / vaRangeHalf;
-                    data.raw_arousal = (data.raw_arousal - vaRangecenter) / vaRangeHalf;
-                    data.smoothed_valence = (data.smoothed_valence - vaRangecenter) / vaRangeHalf;
-                    data.smoothed_arousal = (data.smoothed_arousal - vaRangecenter) / vaRangeHalf;
+                    data.valence = (data.valence - vaRangecenter) / vaRangeHalf;
+                    data.arousal = (data.arousal - vaRangecenter) / vaRangeHalf;
 
                     lock (dataLock) {
                         latestData = data;

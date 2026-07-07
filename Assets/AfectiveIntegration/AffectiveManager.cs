@@ -72,15 +72,15 @@ public class AffectiveManager : MonoBehaviour {
 
             // Fire generic data events
             OnEmotionDataReceived?.Invoke(data);
-            OnValenceChanged?.Invoke(data.smoothed_valence);
-            OnArousalChanged?.Invoke(data.smoothed_arousal);
+            OnValenceChanged?.Invoke(data.valence);
+            OnArousalChanged?.Invoke(data.arousal);
 
             // Fire threshold events
-            if (data.smoothed_arousal > highArousalThreshold) {
+            if (data.arousal > highArousalThreshold) {
                 OnHighArousal?.Invoke();
             }
 
-            if (data.smoothed_valence < negativeValenceThreshold) {
+            if (data.valence < negativeValenceThreshold) {
                 OnNegativeValence?.Invoke();
             }
         }

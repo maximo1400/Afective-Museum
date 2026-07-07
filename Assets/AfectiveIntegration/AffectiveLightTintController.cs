@@ -84,20 +84,20 @@ public class AffectiveLightTintController : MonoBehaviour {
             // Aruch: darker/moodier in an inverse way to emotions
             // Positive emotions -> gets darker (night = can't see = danger)
             // Negative emotions -> tint gets closer to inexistent 
-            targetColor = data.smoothed_valence > 0 ? activeHighColor : activeLowColor;
+            targetColor = data.valence > 0 ? activeHighColor : activeLowColor;
 
-            float valenceNormalized = Mathf.InverseLerp(-1f, 1f, data.smoothed_valence);
+            float valenceNormalized = Mathf.InverseLerp(-1f, 1f, data.valence);
             targetIntensity = Mathf.Lerp(0f, 1f, valenceNormalized);
 
         } else if (cachedTempleName == "Hovhannes") {
             // Hovhannes: warmer the more relaxed someone is and colder otherwise
             // Aroused = high arousal, Colder color
             // Relaxed = low arousal, Warmer color 
-            targetColor = data.smoothed_arousal > 0 ? activeHighColor : activeLowColor;
+            targetColor = data.arousal > 0 ? activeHighColor : activeLowColor;
 
-            targetIntensity = Mathf.Lerp(0f, 1f, Mathf.Abs(data.smoothed_arousal));
+            targetIntensity = Mathf.Lerp(0f, 1f, Mathf.Abs(data.arousal));
         }
-        // Debug.Log($"AffectiveLightController: Received Data -> Arousal: {data.smoothed_arousal}, Valence: {data.smoothed_valence} | Target Intensity: {targetIntensity}");
+        // Debug.Log($"AffectiveLightController: Received Data -> Arousal: {data.arousal}, Valence: {data.valence} | Target Intensity: {targetIntensity}");
     }
 
     void Update() {

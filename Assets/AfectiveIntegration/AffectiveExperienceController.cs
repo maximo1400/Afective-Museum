@@ -59,7 +59,7 @@ public class AffectiveExperienceController : MonoBehaviour {
 
     private void CheckExperienceTriggers(TcpSocketClient.EmotionData data) {
         // 1. High Intensity (Arousal) -> Take Screenshot
-        if (data.smoothed_arousal >= highIntensityThreshold && Time.time - lastScreenshotTime > screenshotCooldown) {
+        if (data.arousal >= highIntensityThreshold && Time.time - lastScreenshotTime > screenshotCooldown) {
             TakeIntensityScreenshot(data);
         }
 
@@ -112,7 +112,7 @@ public class AffectiveExperienceController : MonoBehaviour {
         }
 
         // Check if player is frustrated (negative valence)
-        if (data.smoothed_valence <= lostValenceThreshold) {
+        if (data.valence <= lostValenceThreshold) {
             timeInNegativeValence += timeSinceLastPacket;
         } else {
             timeInNegativeValence = 0f;
