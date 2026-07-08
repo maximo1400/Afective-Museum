@@ -11,8 +11,8 @@ public class TcpSocketClient : MonoBehaviour {
     public float reconnectDelay = 2f;
 
     [Header("Data Mapping Settings")]
-    private float originalRangeMin = 1f;
-    private float originalRangeMax = 5f;
+    private float originalRangeMin = 0f;
+    private float originalRangeMax = 4f;
     private float vaRangecenter;
     private float vaRangeHalf;
     [System.Serializable]

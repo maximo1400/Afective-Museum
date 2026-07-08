@@ -28,6 +28,8 @@ public class MockAffectiveData : MonoBehaviour {
     void Update() {
         if (!isEnabled) return;
 
+        if (TcpClient != null && TcpClient.IsConnected) return;
+
         // Keyboard controls for simulated data using the new Input System
         float step = 0.5f;
         if (Keyboard.current != null) {
@@ -62,6 +64,8 @@ public class MockAffectiveData : MonoBehaviour {
 
     void OnGUI() {
         if (!isEnabled || !AffectiveManager.IsAffectiveSceneActive) return;
+
+        if (TcpClient != null && TcpClient.IsConnected) return;
 
         // Cache the style so we don't create a new object every frame
         if (guiStyle == null) {

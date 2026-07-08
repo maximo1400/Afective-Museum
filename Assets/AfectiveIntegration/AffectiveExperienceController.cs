@@ -95,8 +95,8 @@ public class AffectiveExperienceController : MonoBehaviour {
             }
 
             double currentUnityTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
-            // string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},High Intensity,{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},{screenshotName}";
-            string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},High Intensity,{data.valence},{data.arousal},{data.confidence},{data.timestamp},{currentUnityTimestamp},{data.starting_timestamp},{unityStartingTimestamp},{screenshotName}";
+            string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},High Intensity,{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},{screenshotName}";
+            // string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},High Intensity,{data.valence},{data.arousal},{data.confidence},{data.timestamp},{currentUnityTimestamp},{data.starting_timestamp},{unityStartingTimestamp},{screenshotName}";
             writer.WriteLine(row);
         }
 
