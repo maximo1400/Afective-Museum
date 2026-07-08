@@ -23,16 +23,16 @@ public class AffectiveExperienceController : MonoBehaviour {
     [SerializeField] private float movementThreshold;
     private Vector3 lastRecordedPosition;
     private float timeStuck = 0f;
-    private string sessionStartTimeStr;
     private float lastPacketTime;
     private float timeSinceLastPacket;
     private GameObject currentHelpArrow;
     private double unityStartingTimestamp;
+    private string sessionStartTimeStr;
 
     void Start() {
         unityStartingTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
         lastScreenshotTime = Time.time + firstScreenshotTime; // Delay first screenshot to give player time to settle in
-        sessionStartTimeStr = System.DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+        sessionStartTimeStr = ((long)unityStartingTimestamp).ToString();
         lastPacketTime = Time.time;
 
         if (AffectiveManager.Instance != null) {
@@ -81,24 +81,26 @@ public class AffectiveExperienceController : MonoBehaviour {
         }
 
         string timestampStr = System.DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
-        string screenshotPath = Path.Combine(folderPath, $"Intensity_Screenshot_{timestampStr}.png");
-        string reportPath = Path.Combine(folderPath, $"Intensity_Report_{timestampStr}.yml");
+        string screenshotName = $"Intensity_Screenshot_{timestampStr}.png";
+        string screenshotPath = Path.Combine(folderPath, screenshotName);
+
+        string reportPath = Path.Combine(folderPath, $"out_{sessionStartTimeStr}.csv");
 
         ScreenCapture.CaptureScreenshot(screenshotPath);
 
-        string reportContent = $"timestamp: \"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}\"\n" +
-                               $"event: \"High Intensity\"\n" +
-                               $"metrics:\n" +
-                               $"  valence: {data.valence}\n" +
-                               $"  arousal: {data.arousal}\n" +
-                               $"  confidence: {data.confidence}\n" +
-                               $"  data.timestamp: {data.timestamp}\n" +
-                               $"  unity.timestamp: {System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0}\n" +
-                               $"  data.starting_timestamp: {data.starting_timestamp}\n" +
-                               $"  unity.starting_timestamp: {unityStartingTimestamp}\n";
+        bool writeHeader = !File.Exists(reportPath);
+        using (StreamWriter writer = new(reportPath, true)) {
+            if (writeHeader) {
+                writer.WriteLine("timestamp,event,valence,arousal,confidence,data_timestamp,unity_timestamp,data_starting_timestamp,unity_starting_timestamp,screenshot_name");
+            }
 
-        File.WriteAllText(reportPath, reportContent);
-        Debug.Log($"High Intensity Event! Screenshot saved to: {screenshotPath}");
+            double currentUnityTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+            // string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},High Intensity,{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},{screenshotName}";
+            string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},High Intensity,{data.valence},{data.arousal},{data.confidence},{data.timestamp},{currentUnityTimestamp},{data.starting_timestamp},{unityStartingTimestamp},{screenshotName}";
+            writer.WriteLine(row);
+        }
+
+        Debug.Log($"High Intensity Event! Screenshot saved to: {screenshotPath} and reported to {reportPath}");
     }
 
     private void CheckLostState(TcpSocketClient.EmotionData data) {

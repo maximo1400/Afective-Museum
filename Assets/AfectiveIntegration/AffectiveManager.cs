@@ -23,7 +23,7 @@ public class AffectiveManager : MonoBehaviour {
     [SerializeField] private float negativeValenceThreshold = -0.5f;
 
     private TcpSocketClient tcpClient;
-    private float lastTimestamp = -1f;
+    private double lastTimestamp = -1.0;
 
     public static AffectiveManager Instance { get; private set; }
     public static bool IsAffectiveSceneActive { get; private set; }

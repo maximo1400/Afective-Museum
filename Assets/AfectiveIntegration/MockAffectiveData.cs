@@ -50,8 +50,8 @@ public class MockAffectiveData : MonoBehaviour {
                 valence = simulatedValence,
                 arousal = simulatedArousal,
                 confidence = simulatedConfidence,
-                timestamp = (float)(System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0),
-                starting_timestamp = (float)mockStartingTimestamp
+                timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0,
+                starting_timestamp = mockStartingTimestamp
             };
 
             if (TcpClient != null) {
