@@ -91,11 +91,12 @@ public class AffectiveExperienceController : MonoBehaviour {
         bool writeHeader = !File.Exists(reportPath);
         using (StreamWriter writer = new(reportPath, true)) {
             if (writeHeader) {
-                writer.WriteLine("timestamp,event,valence,arousal,confidence,data_timestamp,unity_timestamp,data_starting_timestamp,unity_starting_timestamp,screenshot_name");
+                writer.WriteLine("timestamp,event,valence,arousal,confidence,data_timestamp,unity_timestamp,data_starting_timestamp,unity_starting_timestamp,screenshot_name,temple");
             }
 
             double currentUnityTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
-            string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},High Intensity,{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},{screenshotName}";
+            string templeName = string.IsNullOrEmpty(AffectiveManager.currentTempleName) ? "None" : AffectiveManager.currentTempleName;
+            string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},High Intensity,{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},{screenshotName},{templeName}";
             // string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},High Intensity,{data.valence},{data.arousal},{data.confidence},{data.timestamp},{currentUnityTimestamp},{data.starting_timestamp},{unityStartingTimestamp},{screenshotName}";
             writer.WriteLine(row);
         }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using System.IO;
 
 public class AffectiveLightTintController : MonoBehaviour {
     [Header("UI Overlay Settings (For Menus)")]
@@ -25,6 +26,8 @@ public class AffectiveLightTintController : MonoBehaviour {
     private Color hovhannesWarmColor = Color.darkOrange;
     private Color hovhannesColdColor = Color.dodgerBlue;
     private readonly float hovhannesMaxOpacity = 0.15f;
+    private double unityStartingTimestamp;
+    private string sessionStartTimeStr;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void OnLoad() {
@@ -40,7 +43,12 @@ public class AffectiveLightTintController : MonoBehaviour {
         }
     }
 
+
+
     void Start() {
+        unityStartingTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+        sessionStartTimeStr = ((long)unityStartingTimestamp).ToString();
+
         targetColor = Color.clear;
         UpdateColorCache();
 
@@ -97,7 +105,32 @@ public class AffectiveLightTintController : MonoBehaviour {
 
             targetIntensity = Mathf.Lerp(0f, 1f, Mathf.Abs(data.arousal));
         }
+
+        LogLightData(data);
         // Debug.Log($"AffectiveLightController: Received Data -> Arousal: {data.arousal}, Valence: {data.valence} | Target Intensity: {targetIntensity}");
+    }
+
+    private void LogLightData(TcpSocketClient.EmotionData data) {
+        if (!AffectiveManager.IsAffectiveSceneActive) return;
+
+        string baseFolderPath = Path.Combine(Application.dataPath, "../AffectiveReports/");
+        string folderPath = Path.Combine(baseFolderPath, $"Session_{sessionStartTimeStr}");
+
+        if (!Directory.Exists(folderPath)) {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        string reportPath = Path.Combine(folderPath, $"light_out_{sessionStartTimeStr}.csv");
+        bool writeHeader = !File.Exists(reportPath);
+
+        using StreamWriter writer = new(reportPath, true);
+        if (writeHeader) {
+            writer.WriteLine("timestamp,temple,valence,arousal,confidence,data_timestamp,unity_timestamp,data_starting_timestamp,unity_starting_timestamp,target_intensity,target_color_r,target_color_g,target_color_b");
+        }
+        double currentUnityTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+        string templeName = string.IsNullOrEmpty(AffectiveManager.currentTempleName) ? "None" : AffectiveManager.currentTempleName;
+        string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},{templeName},{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},{targetIntensity},{targetColor.r},{targetColor.g},{targetColor.b}";
+        writer.WriteLine(row);
     }
 
     void Update() {

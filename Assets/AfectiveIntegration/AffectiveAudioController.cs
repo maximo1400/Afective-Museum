@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.IO;
 
 [RequireComponent(typeof(AudioSource))]
 public class AffectiveAudioController : MonoBehaviour {
@@ -28,8 +29,13 @@ public class AffectiveAudioController : MonoBehaviour {
     private float targetMemoirVolume;
     private float targetPitch = 1.0f;
     private float globalVolume;
+    private double unityStartingTimestamp;
+    private string sessionStartTimeStr;
 
     void Start() {
+        unityStartingTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+        sessionStartTimeStr = ((long)unityStartingTimestamp).ToString();
+
         if (globalAudioSource == null)
             globalAudioSource = GetComponent<AudioSource>();
 
@@ -106,6 +112,31 @@ public class AffectiveAudioController : MonoBehaviour {
         if (affectPitch) {
             targetPitch = Mathf.Lerp(minPitch, maxPitch, arousalNormalized);
         }
+
+        LogAudioData(data);
+    }
+
+    private void LogAudioData(TcpSocketClient.EmotionData data) {
+        if (!AffectiveManager.IsAffectiveSceneActive) return;
+
+        string baseFolderPath = Path.Combine(Application.dataPath, "../AffectiveReports/");
+        string folderPath = Path.Combine(baseFolderPath, $"Session_{sessionStartTimeStr}");
+
+        if (!Directory.Exists(folderPath)) {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        string reportPath = Path.Combine(folderPath, $"audio_out_{sessionStartTimeStr}.csv");
+        bool writeHeader = !File.Exists(reportPath);
+
+        using StreamWriter writer = new(reportPath, true);
+        if (writeHeader) {
+            writer.WriteLine("timestamp,temple,valence,arousal,confidence,data_timestamp,unity_timestamp,data_starting_timestamp,unity_starting_timestamp,global_volume,storm_volume,aysor_volume,memoir_volume,pitch");
+        }
+        double currentUnityTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+        string templeName = string.IsNullOrEmpty(AffectiveManager.currentTempleName) ? "None" : AffectiveManager.currentTempleName;
+        string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},{templeName},{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},{targetGlobalVolume},{targetStormVolume},{targetAysorVolume},{targetMemoirVolume},{targetPitch}";
+        writer.WriteLine(row);
     }
 
     void Update() {
