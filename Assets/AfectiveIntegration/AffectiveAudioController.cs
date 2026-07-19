@@ -10,8 +10,6 @@ public class AffectiveAudioController : MonoBehaviour {
     public AudioSource stormAudioSource;
     [Tooltip("AudioSource for Aysor (Aruch only).")]
     public AudioSource audioAysor;
-    [Tooltip("AudioSource for Memoir (Hovhanes only).")]
-    public AudioSource audioMemoir;
 
     [Header("Volume Settings")]
     [SerializeField] private float maxVolume = 0.3f;
@@ -26,7 +24,6 @@ public class AffectiveAudioController : MonoBehaviour {
     private float targetGlobalVolume;
     private float targetStormVolume;
     private float targetAysorVolume;
-    private float targetMemoirVolume;
     private float targetPitch = 1.0f;
     private float globalVolume;
     private double unityStartingTimestamp;
@@ -58,19 +55,10 @@ public class AffectiveAudioController : MonoBehaviour {
             audioAysor.volume = 0f;
         }
 
-        if (audioMemoir == null) {
-            var child = new GameObject("MemoirAudioSource");
-            child.transform.SetParent(transform);
-            audioMemoir = child.AddComponent<AudioSource>();
-            audioMemoir.playOnAwake = true;
-            audioMemoir.loop = true;
-            audioMemoir.volume = 0f;
-        }
         globalVolume = globalAudioSource.volume;
         targetGlobalVolume = globalVolume;
         targetStormVolume = stormAudioSource.volume;
         targetAysorVolume = audioAysor.volume;
-        targetMemoirVolume = audioMemoir.volume;
 
         if (AffectiveManager.Instance != null) {
             AffectiveManager.Instance.OnEmotionDataReceived.AddListener(UpdateAudioParameters);
@@ -82,7 +70,6 @@ public class AffectiveAudioController : MonoBehaviour {
             targetGlobalVolume = globalVolume;
             targetStormVolume = 0f;
             targetAysorVolume = 0f;
-            targetMemoirVolume = 0f;
             return;
         }
 
@@ -92,12 +79,10 @@ public class AffectiveAudioController : MonoBehaviour {
 
         targetStormVolume = 0f;
         targetAysorVolume = 0f;
-        targetMemoirVolume = 0f;
         targetGlobalVolume = 0f;
 
         if (templeName == "Hovhannes") {
             targetStormVolume = Mathf.Lerp(minVolume, maxVolume, arousalNormalized);
-            targetMemoirVolume = Mathf.Lerp(maxVolume, minVolume, arousalNormalized);
 
         } else if (templeName == "Aruch") {
             targetAysorVolume = Mathf.Lerp(minVolume, maxVolume, valenceNormalized);
@@ -131,11 +116,11 @@ public class AffectiveAudioController : MonoBehaviour {
 
         using StreamWriter writer = new(reportPath, true);
         if (writeHeader) {
-            writer.WriteLine("timestamp,temple,valence,arousal,confidence,data_timestamp,unity_timestamp,data_starting_timestamp,unity_starting_timestamp,global_volume,storm_volume,aysor_volume,memoir_volume,pitch");
+            writer.WriteLine("timestamp,temple,valence,arousal,confidence,data_timestamp,unity_timestamp,data_starting_timestamp,unity_starting_timestamp,global_volume,storm_volume,aysor_volume,pitch");
         }
         double currentUnityTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
         string templeName = string.IsNullOrEmpty(AffectiveManager.currentTempleName) ? "None" : AffectiveManager.currentTempleName;
-        string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},{templeName},{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},{targetGlobalVolume},{targetStormVolume},{targetAysorVolume},{targetMemoirVolume},{targetPitch}";
+        string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},{templeName},{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},{targetGlobalVolume},{targetStormVolume},{targetAysorVolume},{targetPitch}";
         writer.WriteLine(row);
     }
 
@@ -144,13 +129,11 @@ public class AffectiveAudioController : MonoBehaviour {
         globalAudioSource.volume = Mathf.Lerp(globalAudioSource.volume, targetGlobalVolume, Time.deltaTime * crossfadeSpeed);
         stormAudioSource.volume = Mathf.Lerp(stormAudioSource.volume, targetStormVolume, Time.deltaTime * crossfadeSpeed);
         audioAysor.volume = Mathf.Lerp(audioAysor.volume, targetAysorVolume, Time.deltaTime * crossfadeSpeed);
-        audioMemoir.volume = Mathf.Lerp(audioMemoir.volume, targetMemoirVolume, Time.deltaTime * crossfadeSpeed);
 
         if (affectPitch) {
             globalAudioSource.pitch = Mathf.Lerp(globalAudioSource.pitch, targetPitch, Time.deltaTime * crossfadeSpeed);
             stormAudioSource.pitch = Mathf.Lerp(stormAudioSource.pitch, targetPitch, Time.deltaTime * crossfadeSpeed);
             audioAysor.pitch = Mathf.Lerp(audioAysor.pitch, targetPitch, Time.deltaTime * crossfadeSpeed);
-            audioMemoir.pitch = Mathf.Lerp(audioMemoir.pitch, targetPitch, Time.deltaTime * crossfadeSpeed);
         }
     }
 
