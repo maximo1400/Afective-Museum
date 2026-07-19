@@ -42,7 +42,15 @@ public class TcpSocketClient : MonoBehaviour {
     private bool isConnected = false;
     public bool IsConnected => isConnected;
 
+    private string reportPath;
+    private double unityStartingTimestamp;
+    private double currentSessionStartingTimestamp = -1;
+    private string reportsBasePath;
+
     void Start() {
+        unityStartingTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+        reportsBasePath = System.IO.Path.Combine(Application.dataPath, "../AffectiveReports/");
+
         isRunning = true;
         clientThread = new Thread(ClientLoop) {
             IsBackground = true
@@ -83,7 +91,35 @@ public class TcpSocketClient : MonoBehaviour {
                     lock (dataLock) {
                         latestData = data;
                     }
-                    Debug.Log($"TCP message received: {serverMessage}");
+                    
+                    if (data.starting_timestamp != currentSessionStartingTimestamp) {
+                        currentSessionStartingTimestamp = data.starting_timestamp;
+                        string sessionStr = ((long)currentSessionStartingTimestamp).ToString();
+                        string folderPath = System.IO.Path.Combine(reportsBasePath, $"Session_{sessionStr}");
+                        
+                        if (!System.IO.Directory.Exists(folderPath)) {
+                            System.IO.Directory.CreateDirectory(folderPath);
+                        }
+                        reportPath = System.IO.Path.Combine(folderPath, $"out_{sessionStr}.csv");
+                    }
+                    
+                    // Log packet for latency metrics
+                    double currentUnityTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+                    string row = $"{System.DateTime.UtcNow:yyyy-MM-dd HH:mm:ss},Packet Received,{data.valence},{data.arousal},{data.confidence},{data.timestamp:F10},{currentUnityTimestamp:F10},{data.starting_timestamp:F10},{unityStartingTimestamp:F10},None,None";
+                    
+                    try {
+                        bool writeHeader = !System.IO.File.Exists(reportPath);
+                        using (var writer = new System.IO.StreamWriter(reportPath, true)) {
+                            if (writeHeader) {
+                                writer.WriteLine("timestamp,event,valence,arousal,confidence,data_timestamp,unity_timestamp,data_starting_timestamp,unity_starting_timestamp,screenshot_name,temple");
+                            }
+                            writer.WriteLine(row);
+                        }
+                    } catch (Exception) {
+                        // Suppress lock collision on file
+                    }
+
+                    // Debug.Log($"TCP message received: {serverMessage}");
                 }
             } catch (Exception) {
                 // Suppressing socket exception spam on connection failure
